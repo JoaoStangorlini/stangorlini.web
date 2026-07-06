@@ -1,15 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-purple-primary: #4B0082;
-  --color-gold-accent: #FFD700;
-  
-  --color-background-dark: #121212;
-  --color-surface-dark: #1E1E1E;
-  --color-surface-hover: #2A2A2A;
-  
-  --color-text-light: #F5F5F5;
-  --color-text-muted: #A0A0A0;
+  /* Luxo Cósmico Palette */
+  --color-cosmic-bg: #0B1320;
+  --color-cosmic-surface: #240046;
+  --color-cosmic-surface-hover: #5A189A;
+  --color-cosmic-accent: #FFB703;
+  --color-cosmic-text: #E0FBFC;
 
   --font-title: var(--font-bukra), 'Arial Black', sans-serif;
   --font-body: var(--font-open-sans), sans-serif;
@@ -17,8 +14,8 @@
 
 @layer base {
   :root {
-    --background: var(--color-background-dark);
-    --foreground: var(--color-text-light);
+    --background: var(--color-cosmic-bg);
+    --foreground: var(--color-cosmic-text);
   }
 
   body {

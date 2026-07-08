@@ -12,7 +12,7 @@ export default function CurriculoPage() {
           <nav className="hidden md:flex gap-8 items-center">
             <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/#about">Resumo</Link>
             <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/galeria">Fotografia</Link>
-            <Link className="text-[#F5F5F5] font-semibold border-b-2 border-[#FFCC00] pb-1 transition-colors" href="/curriculo">Currículo</Link>
+            <Link className="text-[#9D4EDD] font-bold border-b-[3px] border-[#FFCC00] pb-1 transition-colors" href="/curriculo">Currículo</Link>
           </nav>
           <div className="flex items-center gap-4">
             <Link href="/labdiv" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">

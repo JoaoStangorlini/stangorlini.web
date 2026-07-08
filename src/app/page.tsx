@@ -23,7 +23,7 @@ export default function Home() {
             <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/curriculo">Currículo</Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Link href="/labdiv" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">
+            <Link href="/servidor" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">
               Acesso Restrito
             </Link>
           </div>

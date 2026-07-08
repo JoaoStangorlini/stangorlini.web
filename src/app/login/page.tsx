@@ -7,7 +7,7 @@ export default async function LoginPage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (user) {
-    redirect('/labdiv')
+    redirect('/servidor')
   }
 
   return (

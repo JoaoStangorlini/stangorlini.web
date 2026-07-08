@@ -15,7 +15,7 @@ export default function CurriculoPage() {
             <Link className="text-[#9D4EDD] font-bold border-b-[3px] border-[#FFCC00] pb-1 transition-colors" href="/curriculo">Currículo</Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Link href="/labdiv" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">
+            <Link href="/servidor" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">
               Acesso Restrito
             </Link>
           </div>
@@ -28,7 +28,7 @@ export default function CurriculoPage() {
         <section className="space-y-6 border-b border-[#2D2D2D] pb-12">
           <div>
             <h1 className="text-5xl font-['Bukra'] font-black text-white leading-tight">João Paulo <span className="text-[#FFCC00]">Stangorlini</span><br/>de Carvalho</h1>
-            <p className="text-xl text-[#A0A0A0] mt-4">Estudante de Física (USP) & Desenvolvedor</p>
+            <p className="text-xl text-[#A0A0A0] mt-4">Estudante de Física (USP) | Desenvolvedor | Fotógrafo | Educador | Designer</p>
           </div>
           
           <div className="flex flex-wrap gap-x-8 gap-y-4 pt-4 text-sm">

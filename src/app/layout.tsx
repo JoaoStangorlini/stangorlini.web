@@ -20,6 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${openSans.variable} antialiased h-full`}>
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+      </head>
       <body className="min-h-full flex flex-col bg-[#121212] text-[#F5F5F5]">
         <main className="flex-1 flex flex-col">
           {children}

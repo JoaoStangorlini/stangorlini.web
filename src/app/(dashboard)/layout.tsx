@@ -11,8 +11,10 @@ export default function DashboardLayout({
       <aside className="w-64 bg-[#1A1A1A] border-r border-[#2D2D2D] flex flex-col justify-between shrink-0">
         <div>
           <div className="p-6">
-            <h1 className="text-[#FFCC00] font-bold tracking-wider text-sm mb-1">MONOLITH</h1>
-            <p className="text-xs text-[#8E8E8E] uppercase tracking-widest">Dashboard Privado</p>
+            <Link href="/" className="text-2xl font-['Bukra'] font-black tracking-widest text-white block mb-1">
+              STANGORLINI.<span className="text-[#FFCC00]">WEB</span>
+            </Link>
+            <p className="text-[10px] text-[#8E8E8E] uppercase tracking-widest mt-2">Painel de Gerenciamento</p>
           </div>
           
           <nav className="px-3 space-y-1">

@@ -16,7 +16,7 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] flex items-center justify-center p-4">
+    <div className="h-full overflow-y-auto bg-[#121212] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-[#1E1E1E] border border-[#2D2D2D] rounded-xl p-8 shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-[#e5e2e1] tracking-tight">LOGIN</h1>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function CurriculoPage() {
   return (
-    <div className="font-['Open_Sans'] min-h-screen bg-[#121212] text-[#F5F5F5]">
+    <div className="font-['Open_Sans'] h-full overflow-y-auto bg-[#121212] text-[#F5F5F5]">
       
       <main className="pt-10 pb-16 px-6 max-w-4xl mx-auto space-y-16">
         

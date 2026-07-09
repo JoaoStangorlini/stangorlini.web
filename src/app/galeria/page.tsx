@@ -6,21 +6,20 @@ import Link from 'next/link';
 
 export default function GaleriaPage() {
   return (
-    <div className="font-['Open_Sans'] min-h-screen bg-[#121212] text-[#F5F5F5] flex flex-col">
+    <div className="font-['Open_Sans'] h-full overflow-y-auto bg-[#121212] text-[#F5F5F5] flex flex-col">
       {/* Main Content with Iframe */}
       <main className="flex-1 w-full relative bg-[#1A1A1A] flex flex-col">
         <div className="flex-1 w-full min-h-[80vh]">
           <script src="https://embedding.pic-time.com/pictures/scripts/compiled/artgalleryembed.js" async></script>
-          <iframe 
-            frameBorder="0" 
-            id="pictimeIntegration" 
-            src="https://stangorliniphotography.pic-time.com/client?headless=true" 
-            style={{ width: '100%', height: '100%', border: 'none', minHeight: '80vh' }}
+          <iframe
+            id="pictimeIntegration"
+            src="https://stangorliniphotography.pic-time.com/client?headless=true&theme=dark&darkMode=true"
+            style={{ width: '100%', height: "100%", border: 'none', minHeight: '80vh', colorScheme: 'dark' }}
             title="Galeria Pic-Time"
             allowFullScreen
           ></iframe>
         </div>
-        
+
         {/* Contato Footer */}
         <div className="bg-[#121212] border-t border-[#2D2D2D] py-12 px-6 shrink-0">
           <div className="max-w-4xl mx-auto text-center space-y-6">

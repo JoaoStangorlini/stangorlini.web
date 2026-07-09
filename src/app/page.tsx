@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="font-['Open_Sans'] relative min-h-screen bg-[#121212] text-[#F5F5F5]">
+    <div className="font-['Open_Sans'] relative h-full overflow-y-auto bg-[#121212] text-[#F5F5F5]">
       
       {/* Background Decorators */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-50">

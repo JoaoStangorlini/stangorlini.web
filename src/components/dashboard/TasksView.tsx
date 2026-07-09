@@ -493,8 +493,8 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
           )}
 
           {/* Row 4: Botão de Filtros */}
-          <div className="flex w-full overflow-x-auto hide-scrollbar items-center justify-end gap-3 shrink-0 pb-1 z-30">
-            <div className="flex items-center text-[#8E8E8E] text-[11px] font-bold px-3 shrink-0 bg-[#1A1A1A] rounded-md border border-[#2D2D2D] h-[36px]">
+          <div className="flex flex-col md:flex-row w-full items-end md:items-center justify-end gap-3 shrink-0 pb-1 z-30">
+            <div className="flex items-center text-[#8E8E8E] text-[11px] font-bold px-3 shrink-0 bg-[#1A1A1A] rounded-md border border-[#2D2D2D] h-[36px] w-auto justify-center md:justify-start order-2 md:order-1">
               <span className="text-[#FFCC00] text-sm mr-1">{processedTasks.length}</span> 
               <span className="hidden sm:inline">de</span>
               <span className="text-white text-sm mx-1">{localTasks.length}</span> 
@@ -516,7 +516,8 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
               )}
             </div>
 
-            <div className="relative shrink-0" ref={filterMenuRef}>
+            <div className="flex items-center gap-3 order-1 md:order-2 w-full md:w-auto justify-end shrink-0">
+              <div className="relative shrink-0" ref={filterMenuRef}>
               <button 
                 onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
               className="flex items-center gap-2 bg-[#9D4EDD] text-white font-bold rounded-md px-4 py-2 text-sm hover:bg-[#8338C7] transition-colors shadow-sm"
@@ -619,12 +620,13 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
             )}
             </div>
             
-            <button 
-              onClick={handleNew}
-              className="bg-[#FFCC00] text-[#121212] font-bold text-sm px-4 py-2 rounded-md hover:bg-[#e6b800] transition-colors shadow-sm shrink-0"
-            >
-              + Nova Tarefa
-            </button>
+              <button 
+                onClick={handleNew}
+                className="bg-[#FFCC00] text-[#121212] font-bold text-sm px-4 py-2 rounded-md hover:bg-[#e6b800] transition-colors shadow-sm shrink-0"
+              >
+                + Nova Tarefa
+              </button>
+            </div>
           </div>
 
 

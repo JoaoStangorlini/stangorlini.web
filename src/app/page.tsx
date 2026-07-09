@@ -11,26 +11,8 @@ export default function Home() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-[#3B1E43] blur-[150px]"></div>
       </div>
       
-      {/* Header / TopNavBar */}
-      <header className="fixed top-0 w-full z-50 bg-[#121212]/80 backdrop-blur-xl border-b border-[#2D2D2D]">
-        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-          <Link href="/" className="text-xl font-['Bukra'] font-black tracking-tighter text-[#FFCC00]">
-            stangorlini.web
-          </Link>
-          <nav className="hidden md:flex gap-8 items-center">
-            <Link className="text-[#9D4EDD] font-bold border-b-[3px] border-[#FFCC00] pb-1 transition-colors" href="/#about">Resumo</Link>
-            <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/galeria">Fotografia</Link>
-            <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/curriculo">Currículo</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/servidor" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">
-              Acesso Restrito
-            </Link>
-          </div>
-        </div>
-      </header>
       
-      <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto space-y-32 relative z-10">
+      <main className="pb-24 px-6 max-w-7xl mx-auto space-y-32 relative z-10 pt-10">
         
         {/* Hero Section */}
         <section className="flex flex-col-reverse md:grid md:grid-cols-12 gap-12 items-center" id="about">

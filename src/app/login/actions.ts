@@ -20,6 +20,18 @@ export async function login(formData: FormData) {
     redirect('/login?error=Invalid credentials')
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/servidor')
+  const next = formData.get('next') as string;
+  revalidatePath('/', 'layout');
+
+  if (next && next.startsWith('/')) {
+    redirect(next);
+  } else {
+    // Fallback inteligente
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.id === 'f2f1e6c9-a178-433f-9d87-37d6ce7ec94e') {
+      redirect('/servidor');
+    } else {
+      redirect('/labdiv');
+    }
+  }
 }

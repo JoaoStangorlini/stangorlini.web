@@ -2,9 +2,14 @@ import { login } from '@/app/login/actions'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  const next = typeof searchParams?.next === 'string' ? searchParams.next : '';
 
   if (user) {
     redirect('/servidor')
@@ -14,11 +19,12 @@ export default async function LoginPage() {
     <div className="min-h-screen bg-[#121212] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-[#1E1E1E] border border-[#2D2D2D] rounded-xl p-8 shadow-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-[#e5e2e1] tracking-tight">HUB LABDIV</h1>
+          <h1 className="text-2xl font-bold text-[#e5e2e1] tracking-tight">LOGIN</h1>
           <p className="text-[#a0a0a0] mt-2 text-sm">Acesso Restrito</p>
         </div>
 
         <form className="flex flex-col gap-4">
+          <input type="hidden" name="next" value={next} />
           <div>
             <label className="block text-xs font-semibold text-[#a0a0a0] uppercase tracking-wider mb-2" htmlFor="email">
               Email

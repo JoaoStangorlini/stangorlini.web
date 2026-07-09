@@ -11,5 +11,7 @@ export interface Task {
   descricao: string | null;
   frequencia: string | null;
   dimensao: string | null;
+  concluida_em: string | null;
   user_id: string;
+  ordem_manual?: number;
 }

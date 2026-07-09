@@ -4,6 +4,23 @@ import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { Task } from '@/types';
 
+export async function updateTaskOrders(updates: { id: string, ordem_manual: number }[]) {
+  const supabase = await createClient();
+  
+  // Executar os updates individualmente
+  for (const update of updates) {
+    const { error } = await supabase
+      .from('tasks')
+      .update({ ordem_manual: update.ordem_manual })
+      .eq('id', update.id);
+      
+    if (error) {
+      console.error("Erro ao atualizar ordem:", error);
+      throw new Error(error.message);
+    }
+  }
+}
+
 export async function saveTask(taskData: Partial<Task>) {
   const supabase = await createClient();
 
@@ -32,7 +49,14 @@ export async function saveTask(taskData: Partial<Task>) {
         dataToSave.inicio = i.toISOString();
       }
       dataToSave.status = 'não iniciada'; // Reseta o status
+      dataToSave.concluida_em = null;
     }
+  } else if (dataToSave.status === 'completa') {
+    // Se marcou como completa e não é recorrente (ou não tem frequencia)
+    dataToSave.concluida_em = new Date().toISOString();
+  } else {
+    // Se mudou para qualquer outro status, remove a data de conclusão
+    dataToSave.concluida_em = null;
   }
 
   // Remove empty strings and replace with null for database consistency
@@ -78,6 +102,39 @@ export async function deleteTask(id: string) {
 
   if (error) throw new Error(error.message);
   
+  revalidatePath('/labdiv');
+  revalidatePath('/servidor');
+}
+
+export async function updateMultipleTasks(taskIds: string[], updates: Partial<Task>) {
+  const supabase = await createClient();
+
+  // Remove empty strings and replace with null for database consistency
+  const dataToSave = { ...updates };
+  Object.keys(dataToSave).forEach(key => {
+    if (dataToSave[key as keyof Task] === '') {
+      (dataToSave as any)[key] = null;
+    }
+  });
+
+  // Se marcou o status como "completa" na edição múltipla, vamos tratar o concluida_em simplificadamente.
+  // Note: a lógica complexa de recorrência será ignorada para edições em massa por segurança (para evitar dupes).
+  if (dataToSave.status === 'completa') {
+    dataToSave.concluida_em = new Date().toISOString();
+  } else if (dataToSave.status && dataToSave.status !== 'completa') {
+    dataToSave.concluida_em = null;
+  }
+
+  const { error } = await supabase
+    .from('tasks')
+    .update(dataToSave)
+    .in('id', taskIds);
+
+  if (error) {
+    console.error("Erro na edição em massa:", error);
+    throw new Error(error.message);
+  }
+
   revalidatePath('/labdiv');
   revalidatePath('/servidor');
 }

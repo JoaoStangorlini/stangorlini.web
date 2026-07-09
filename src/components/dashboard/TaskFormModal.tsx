@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Task } from '@/types';
 import { saveTask, deleteTask } from '@/app/(dashboard)/actions';
+import { getBadgeColorClass } from './Badge';
+import { CustomSelect } from './CustomSelect';
 
 interface TaskFormModalProps {
   isOpen: boolean;
@@ -94,7 +96,7 @@ export function TaskFormModal({ isOpen, onClose, task }: TaskFormModalProps) {
       <div className="bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
         
         <div className="flex justify-between items-center p-6 border-b border-[#2D2D2D]">
-          <h2 className="text-xl font-bold text-white">{task ? 'Editar Tarefa' : 'Nova Tarefa'}</h2>
+          <h2 className="text-xl font-bold text-[#FFCC00]">{task ? 'Editar Tarefa' : 'Nova Tarefa'}</h2>
           <button onClick={onClose} className="text-[#A0A0A0] hover:text-white">
             <span className="material-symbols-outlined">close</span>
           </button>
@@ -110,65 +112,27 @@ export function TaskFormModal({ isOpen, onClose, task }: TaskFormModalProps) {
 
             <div>
               <label className="block text-xs text-[#8E8E8E] uppercase tracking-wider mb-2">Status</label>
-              <select name="status" value={formData.status || ''} onChange={handleChange} className="w-full bg-[#121212] border border-[#2D2D2D] rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#FFCC00]">
-                <option value="não iniciada">Não iniciada</option>
-                <option value="em progresso">Em progresso</option>
-                <option value="falta testar">Falta testar</option>
-                <option value="completa">Completa</option>
-                <option value="descartada">Descartada</option>
-              </select>
+              <CustomSelect name="status" value={formData.status || ''} onChange={handleChange} type="status" options={[{"value":"não iniciada","label":"Não iniciada"},{"value":"em progresso","label":"Em progresso"},{"value":"falta testar","label":"Falta testar"},{"value":"completa","label":"Completa"},{"value":"descartada","label":"Descartada"}]} />
             </div>
 
             <div>
               <label className="block text-xs text-[#8E8E8E] uppercase tracking-wider mb-2">Prioridade</label>
-              <select name="prioridade" value={formData.prioridade || ''} onChange={handleChange} className="w-full bg-[#121212] border border-[#2D2D2D] rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#FFCC00]">
-                <option value="">Nenhuma</option>
-                <option value="Baixa">Baixa</option>
-                <option value="Média">Média</option>
-                <option value="Alta">Alta</option>
-              </select>
+              <CustomSelect name="prioridade" value={formData.prioridade || ''} onChange={handleChange} type="prioridade" options={[{"value":"","label":"Nenhuma"},{"value":"Baixa","label":"Baixa"},{"value":"Média","label":"Média"},{"value":"Alta","label":"Alta"}]} />
             </div>
 
             <div>
               <label className="block text-xs text-[#8E8E8E] uppercase tracking-wider mb-2">Categoria</label>
-              <select name="categoria" value={formData.categoria || ''} onChange={handleChange} className="w-full bg-[#121212] border border-[#2D2D2D] rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#FFCC00]">
-                <option value="">Nenhuma</option>
-                <option value="Programar">Programar</option>
-                <option value="Pesquisar">Pesquisar</option>
-                <option value="touch the grass">Touch the grass</option>
-                <option value="reunir">Reunir</option>
-                <option value="post">Post</option>
-                <option value="outros">Outros</option>
-              </select>
+              <CustomSelect name="categoria" value={formData.categoria || ''} onChange={handleChange} type="categoria" options={[{"value":"","label":"Nenhuma"},{"value":"Programar","label":"Programar"},{"value":"Pesquisar","label":"Pesquisar"},{"value":"touch the grass","label":"Touch the grass"},{"value":"reunir","label":"Reunir"},{"value":"post","label":"Post"},{"value":"outros","label":"Outros"}]} />
             </div>
 
             <div>
               <label className="block text-xs text-[#8E8E8E] uppercase tracking-wider mb-2">Responsável</label>
-              <select name="responsavel" value={formData.responsavel || ''} onChange={handleChange} className="w-full bg-[#121212] border border-[#2D2D2D] rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#FFCC00]">
-                <option value="">Nenhum</option>
-                <option value="João">João</option>
-                <option value="Andy">Andy</option>
-                <option value="Leo">Leo</option>
-                <option value="Dani">Dani</option>
-                <option value="Lorenzo">Lorenzo</option>
-                <option value="Nacky">Nacky</option>
-              </select>
+              <CustomSelect name="responsavel" value={formData.responsavel || ''} onChange={handleChange} type="responsavel" options={[{"value":"","label":"Nenhum"},{"value":"João","label":"João"},{"value":"Andy","label":"Andy"},{"value":"Leo","label":"Leo"},{"value":"Dani","label":"Dani"},{"value":"Lorenzo","label":"Lorenzo"},{"value":"Nacky","label":"Nacky"}]} />
             </div>
 
             <div>
               <label className="block text-xs text-[#8E8E8E] uppercase tracking-wider mb-2">Dimensão</label>
-              <select name="dimensao" value={formData.dimensao || ''} onChange={handleChange} className="w-full bg-[#121212] border border-[#2D2D2D] rounded-md px-4 py-2 text-white focus:outline-none focus:border-[#FFCC00]">
-                <option value="">Nenhuma</option>
-                <option value="HUB">HUB</option>
-                <option value="pessoal">Pessoal</option>
-                <option value="USP">USP</option>
-                <option value="filmes/series">Filmes/Series</option>
-                <option value="cin">Cin</option>
-                <option value="tatuagens">Tatuagens</option>
-                <option value="compras">Compras</option>
-                <option value="hobbys">Hobbys</option>
-                <option value="livros">Livros</option>
-              </select>
+              <CustomSelect name="dimensao" value={formData.dimensao || ''} onChange={handleChange} type="dimensao" options={[{"value":"","label":"Nenhuma"},{"value":"HUB","label":"HUB"},{"value":"urgente","label":"Urgente"},{"value":"USP","label":"USP"},{"value":"filmes/series","label":"Filmes/Series"},{"value":"cin","label":"Cin"},{"value":"tatuagens","label":"Tatuagens"},{"value":"compras","label":"Compras"},{"value":"hobbys","label":"Hobbys"},{"value":"livros","label":"Livros"}]} />
             </div>
 
             <div>

@@ -7,27 +7,8 @@ import Link from 'next/link';
 export default function GaleriaPage() {
   return (
     <div className="font-['Open_Sans'] min-h-screen bg-[#121212] text-[#F5F5F5] flex flex-col">
-      {/* Header / TopNavBar Padronizado */}
-      <header className="fixed top-0 w-full z-50 bg-[#121212]/80 backdrop-blur-xl border-b border-[#2D2D2D]">
-        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-          <Link href="/" className="text-xl font-['Bukra'] font-black tracking-tighter text-[#FFCC00]">
-            stangorlini.web
-          </Link>
-          <nav className="hidden md:flex gap-8 items-center">
-            <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/#about">Resumo</Link>
-            <Link className="text-[#9D4EDD] font-bold border-b-[3px] border-[#FFCC00] pb-1 transition-colors" href="/galeria">Fotografia</Link>
-            <Link className="text-[#A0A0A0] font-medium hover:text-[#9D4EDD] transition-colors" href="/curriculo">Currículo</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/servidor" className="px-6 py-2 bg-[#9D4EDD] text-white text-sm font-bold rounded-md hover:bg-[#7B2CBF] transition-all">
-              Acesso Restrito
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content with Iframe */}
-      <main className="flex-1 w-full relative bg-[#1A1A1A] mt-[76px] flex flex-col">
+      <main className="flex-1 w-full relative bg-[#1A1A1A] flex flex-col">
         <div className="flex-1 w-full min-h-[80vh]">
           <script src="https://embedding.pic-time.com/pictures/scripts/compiled/artgalleryembed.js" async></script>
           <iframe 

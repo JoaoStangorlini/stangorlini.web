@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
+import Navbar from "@/components/Navbar";
 
 import "./globals.css";
 
@@ -13,18 +14,42 @@ export const metadata: Metadata = {
   description: "Gerenciador de Tarefas e Projetos",
 };
 
-export default function RootLayout({
+import { createClient } from "@/utils/supabase/server";
+import GlobalHighlighter from "@/components/GlobalHighlighter";
+import { Suspense } from "react";
+import NextTopLoader from 'nextjs-toploader';
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let userRole: 'ADM' | 'LabDiv' | 'Convidado' = 'Convidado';
+  let targetHref = '/login';
+
+  if (user?.id === 'f2f1e6c9-a178-433f-9d87-37d6ce7ec94e') {
+    userRole = 'ADM';
+    targetHref = '/servidor';
+  } else if (user?.id === '7dcfe172-1cf0-4389-9abd-f340b1408386') {
+    userRole = 'LabDiv';
+    targetHref = '/labdiv';
+  }
+
   return (
     <html lang="pt-BR" className={`${openSans.variable} antialiased h-full`}>
       <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#121212] text-[#F5F5F5]">
-        <main className="flex-1 flex flex-col">
+      <body className="h-full bg-[#121212] flex flex-col overflow-hidden text-[#e5e2e1]">
+        <NextTopLoader color="#FFCC00" height={3} showSpinner={false} shadow="0 0 10px #FFCC00,0 0 5px #FFCC00" />
+        <Suspense fallback={null}>
+          <GlobalHighlighter />
+        </Suspense>
+        <Navbar initialRole={userRole} initialTargetHref={targetHref} />
+        <main className="flex-1 flex flex-col overflow-hidden">
           {children}
         </main>
       </body>

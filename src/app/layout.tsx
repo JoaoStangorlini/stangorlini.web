@@ -49,7 +49,7 @@ export default async function RootLayout({
           <GlobalHighlighter />
         </Suspense>
         <Navbar initialRole={userRole} initialTargetHref={targetHref} />
-        <main className="flex-1 flex flex-col overflow-hidden">
+        <main className="flex-1 flex flex-col overflow-y-auto">
           {children}
         </main>
       </body>

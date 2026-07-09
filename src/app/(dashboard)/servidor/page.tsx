@@ -44,14 +44,14 @@ export default async function ServidorPage() {
   }
 
   return (
-    <div className="h-full flex flex-col p-4 md:p-8 bg-[#121212]">
+    <div className="min-h-full flex flex-col p-4 md:p-8 bg-[#121212]">
       <div className="mb-4 md:mb-6 shrink-0">
         <h1 className="text-2xl font-bold text-[#e5e2e1]">Servidor Geral</h1>
         <p className="text-sm text-[#8E8E8E] mt-1 mb-4">Visão global de todas as tarefas e dimensões</p>
         <QuickLinks />
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div>
         <TasksView initialTasks={tasks || []} />
       </div>
     </div>

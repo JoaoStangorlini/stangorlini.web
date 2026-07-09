@@ -317,11 +317,11 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
   };
 
   const scrollToBottom = () => {
-    if (desktopContainerRef.current) {
-      desktopContainerRef.current.scrollTo({ top: desktopContainerRef.current.scrollHeight, behavior: 'smooth' });
-    }
-    if (mobileContainerRef.current) {
-      mobileContainerRef.current.scrollTo({ top: mobileContainerRef.current.scrollHeight, behavior: 'smooth' });
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.scrollTo({ top: mainElement.scrollHeight, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
   };
 
@@ -415,7 +415,7 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
   }, [localTasks, searchTerm, selectedStatuses, selectedCategories, selectedUsers, selectedDimensions, sortBy]);
 
   return (
-    <div className="w-full flex flex-col h-full overflow-hidden relative">
+    <div className="w-full flex flex-col relative">
       
       {/* Header & Toolbar */}
       <div className="flex flex-col gap-4 mb-6 shrink-0">
@@ -632,7 +632,7 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
       </div>
 
       {/* Desktop View (Table) */}
-      <div ref={desktopContainerRef} className="hidden md:block flex-1 overflow-x-auto overflow-y-auto bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg relative">
+      <div ref={desktopContainerRef} className="hidden md:block overflow-x-auto bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg relative">
         <table className="w-full text-left border-collapse min-w-[1400px]">
           <thead className="bg-[#252525] border-b border-[#2D2D2D] sticky top-0 z-10">
             <tr>
@@ -714,7 +714,7 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
       </div>
 
       {/* Mobile View (Cards) */}
-      <div ref={mobileContainerRef} className="md:hidden flex-1 overflow-y-auto touch-pan-y space-y-4 pb-20 mt-4">
+      <div ref={mobileContainerRef} className="md:hidden space-y-4 pb-20 mt-4">
         {processedTasks.map(task => (
           <div 
             key={task.id} 

@@ -873,7 +873,7 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
       {/* Floating Scroll to Bottom Button */}
       <button 
         onClick={scrollToBottom}
-        className="absolute bottom-24 md:bottom-6 right-6 bg-[#1A1A1A] hover:bg-[#9D4EDD]/10 border border-[#FFCC00]/50 hover:border-[#9D4EDD] text-[#8E8E8E] hover:text-[#9D4EDD] p-3 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center z-20 group"
+        className="fixed bottom-24 md:bottom-6 right-6 bg-[#1A1A1A] hover:bg-[#9D4EDD]/10 border border-[#FFCC00]/50 hover:border-[#9D4EDD] text-[#8E8E8E] hover:text-[#9D4EDD] p-3 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center z-20 group"
         title="Ir para o fundo (Mais Recentes)"
       >
         <span className="material-symbols-outlined">arrow_downward</span>

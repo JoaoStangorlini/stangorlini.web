@@ -26,9 +26,15 @@ function formatDate(dateStr: string | null) {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-function getDaysUntil(dateStr: string | null) {
+function getDaysUntil(dateStr: string | null, concluidaEm: string | null = null) {
   if (!dateStr) return null;
   const today = new Date();
+  if (concluidaEm) {
+    const concluida = new Date(concluidaEm);
+    if (!isNaN(concluida.getTime())) {
+      today.setTime(concluida.getTime());
+    }
+  }
   today.setHours(0, 0, 0, 0);
   const deadline = new Date(dateStr.includes('T') ? dateStr : `${dateStr}T00:00:00`);
   deadline.setHours(0, 0, 0, 0);
@@ -961,7 +967,7 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
       </div>
 
       {/* Desktop View (Table) */}
-      <div ref={desktopContainerRef} className="hidden md:block overflow-x-auto bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg relative">
+      <div ref={desktopContainerRef} style={{ overflowAnchor: 'none' }} className="hidden md:block overflow-x-auto bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg relative">
         <table className="w-full text-left border-collapse min-w-[1400px]">
           <thead className="bg-[#252525] border-b border-[#2D2D2D] sticky top-0 z-10">
             <tr>
@@ -1047,7 +1053,11 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
                   <td className="p-4 text-xs">
                     {task.prazo ? (
                       (() => {
-                        if (task.status === 'completa') return <span className="text-[#9D4EDD] font-bold">Concluída</span>;
+                        if (task.status === 'completa') {
+                          const days = getDaysUntil(task.prazo, task.concluida_em);
+                          if (days === null) return <span className="text-[#9D4EDD] font-bold">Concluída</span>;
+                          return <span className="text-[#9D4EDD] font-bold">Concluída ({days > 0 ? `+${days}d` : `${days}d`})</span>;
+                        }
                         if (task.status === 'descartada') return <span className="text-[#8E8E8E] font-bold">-</span>;
                         const days = getDaysUntil(task.prazo);
                         if (days === null) return '-';
@@ -1074,7 +1084,7 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
       </div>
 
       {/* Mobile View (Cards) */}
-      <div ref={mobileContainerRef} className="md:hidden space-y-4 pb-20 mt-4">
+      <div ref={mobileContainerRef} style={{ overflowAnchor: 'none' }} className="md:hidden space-y-4 pb-20 mt-4">
         {processedTasks.map(task => (
           <div 
             key={task.id} 
@@ -1145,7 +1155,11 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
                 Fim: {formatDate(task.prazo)}
                 {task.prazo && (
                   (() => {
-                    if (task.status === 'completa') return <span className="text-[#9D4EDD] font-bold">Concluída</span>;
+                    if (task.status === 'completa') {
+                      const days = getDaysUntil(task.prazo, task.concluida_em);
+                      if (days === null) return <span className="text-[#9D4EDD] font-bold">Concluída</span>;
+                      return <span className="text-[#9D4EDD] font-bold">Concluída ({days > 0 ? `+${days}d` : `${days}d`})</span>;
+                    }
                     if (task.status === 'descartada') return <span className="text-[#8E8E8E] font-bold">-</span>;
                     const days = getDaysUntil(task.prazo);
                     if (days === null) return null;

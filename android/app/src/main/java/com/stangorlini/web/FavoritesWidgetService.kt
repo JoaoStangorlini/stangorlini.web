@@ -14,6 +14,20 @@ class FavoritesWidgetService : RemoteViewsService() {
     }
 }
 
+private fun getStatusColor(statusName: String): Int {
+    val text = statusName.lowercase().trim()
+    val colorStr = when {
+        text.contains("completa") -> "#0f9d58"
+        text.contains("testar") -> "#f4b400"
+        text.contains("descartada") -> "#db4437"
+        text.contains("progresso") -> "#4285f4"
+        text.contains("iniciada") -> "#E0E0E0"
+        text.contains("rascunho") -> "#8E8E8E"
+        else -> "#FFCC00"
+    }
+    return android.graphics.Color.parseColor(colorStr)
+}
+
 class FavoritesWidgetFactory(private val context: Context) : RemoteViewsService.RemoteViewsFactory {
     private var tasksArray = JSONArray()
 
@@ -95,6 +109,15 @@ class FavoritesWidgetFactory(private val context: Context) : RemoteViewsService.
                     val date = sdf.parse(prazo)
                     if (date != null) {
                         val today = java.util.Calendar.getInstance()
+                        val concluidaEmStr = task.optString("concluida_em", "")
+                        val statusStr = task.optString("status", "").lowercase(Locale.getDefault())
+                        if (statusStr.contains("completa") && concluidaEmStr.isNotEmpty() && concluidaEmStr != "null") {
+                            try {
+                                val cDate = sdf.parse(concluidaEmStr)
+                                if (cDate != null) today.time = cDate
+                            } catch (e: Exception) {}
+                        }
+                        
                         today.set(java.util.Calendar.HOUR_OF_DAY, 0)
                         today.set(java.util.Calendar.MINUTE, 0)
                         today.set(java.util.Calendar.SECOND, 0)
@@ -119,10 +142,12 @@ class FavoritesWidgetFactory(private val context: Context) : RemoteViewsService.
                         
                         val textColor = when {
                             diffDays < 0L -> "#FF4444"
-                            diffDays == 0L || diffDays == 1L -> "#FFD700"
-                            else -> "#E0E0E0"
+                            else -> "#FFCC00"
                         }
                         views.setTextColor(R.id.task_date, android.graphics.Color.parseColor(textColor))
+                        
+                        val status = task.optString("status", "")
+                        views.setInt(R.id.task_status, "setColorFilter", getStatusColor(status))
                     }
                 } catch (e: Exception) {
                     views.setTextViewText(R.id.task_date, "")

@@ -51,6 +51,13 @@ class FavoritesWidgetProvider : AppWidgetProvider() {
             val titleText = if (selectedDim.isEmpty()) "Todas as Dimensões ▼" else "$selectedDim ▼"
             views.setTextViewText(R.id.widget_title, titleText)
             
+            // Show star only if Favoritas
+            if (selectedDim == "Favoritas") {
+                views.setViewVisibility(R.id.widget_star, android.view.View.VISIBLE)
+            } else {
+                views.setViewVisibility(R.id.widget_star, android.view.View.GONE)
+            }
+            
             // To allow item clicks (we will direct it to WidgetActionActivity)
             val clickIntentTemplate = Intent(context, WidgetActionActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

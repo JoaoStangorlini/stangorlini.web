@@ -35,8 +35,8 @@ class WidgetActionActivity : Activity() {
     }
 
     private fun showStatusDialog(taskId: String) {
-        val statuses = arrayOf("Não Iniciada", "Em Progresso", "Atrasada", "Completa", "Descartada")
-        val internalStatuses = arrayOf("nao_iniciada", "em_progresso", "atrasada", "completa", "descartada")
+        val statuses = arrayOf("Não Iniciada", "Em Progresso", "Falta Testar", "Completa", "Descartada")
+        val internalStatuses = arrayOf("não iniciada", "em progresso", "falta testar", "completa", "descartada")
         
         val dialogView = layoutInflater.inflate(R.layout.dialog_custom_menu, null)
         val titleView = dialogView.findViewById<android.widget.TextView>(R.id.dialog_title)

@@ -2,7 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
+import { Preferences } from '@capacitor/preferences';
 
 export default function Navbar({ 
   initialRole, 
@@ -13,12 +16,37 @@ export default function Navbar({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const targetHref = initialTargetHref;
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
-  // Removido o useEffect pesado de auth no client-side.
-  // O Next.js Server Components injeta as props diretamente na renderização.
   const userRole = initialRole;
-  const targetHref = initialTargetHref;
+
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    
+    const checkWidgetIntent = async () => {
+      try {
+        const { value: openTaskId } = await Preferences.get({ key: 'widget_action_open_task' });
+        if (openTaskId) {
+          if (window.location.pathname !== '/servidor') {
+            router.push('/servidor');
+          }
+        }
+      } catch(e) {}
+    };
+
+    checkWidgetIntent();
+    
+    const listener = CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+      if (isActive) checkWidgetIntent();
+    });
+
+    return () => {
+      listener.then(l => l.remove());
+    };
+  }, [router]);
+
 
   const navLinks = [
     { name: 'Resumo', href: '/' },

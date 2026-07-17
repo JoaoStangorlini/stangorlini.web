@@ -96,8 +96,8 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
     const syncFavorites = async () => {
       if (!Capacitor.isNativePlatform()) return;
       try {
-        const favorites = localTasks; // Sync all active tasks, not just favorites
-        const widgetTasks = favorites.map(t => ({
+        const activeTasks = localTasks.filter(t => t.status !== 'completa' && t.status !== 'descartada');
+        const widgetTasks = activeTasks.map(t => ({
           id: t.id,
           nome: t.nome,
           prazo: t.prazo,
@@ -1032,6 +1032,8 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
                   <td className="p-4 text-xs">
                     {task.prazo ? (
                       (() => {
+                        if (task.status === 'completa') return <span className="text-[#9D4EDD] font-bold">Concluída</span>;
+                        if (task.status === 'descartada') return <span className="text-[#8E8E8E] font-bold">-</span>;
                         const days = getDaysUntil(task.prazo);
                         if (days === null) return '-';
                         if (days < 0) return <span className="text-[#db4437] font-bold">Atrasada ({-days}d)</span>;
@@ -1128,6 +1130,8 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
                 Fim: {formatDate(task.prazo)}
                 {task.prazo && (
                   (() => {
+                    if (task.status === 'completa') return <span className="text-[#9D4EDD] font-bold">Concluída</span>;
+                    if (task.status === 'descartada') return <span className="text-[#8E8E8E] font-bold">-</span>;
                     const days = getDaysUntil(task.prazo);
                     if (days === null) return null;
                     if (days < 0) return <span className="text-[#db4437] font-bold">({-days}d)</span>;

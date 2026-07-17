@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Task } from '@/types';
 import { saveTask, deleteTask } from '@/app/(dashboard)/actions';
 import { getBadgeColorClass } from './Badge';
@@ -9,7 +9,7 @@ import { CustomSelect } from './CustomSelect';
 interface TaskFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  task?: Task | null;
+  task?: (Task & { subtasks?: Task[] }) | null;
   uniqueCategories?: string[];
   uniqueDimensions?: string[];
 }
@@ -18,9 +18,14 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
   const [loading, setLoading] = useState(false);
   const [freqType, setFreqType] = useState('');
   const [freqDetail, setFreqDetail] = useState('');
-  const [subtasks, setSubtasks] = useState<{ id: string; title: string; completed: boolean }[]>([]);
+  
+  // Local state for subtasks (both existing and newly added in this session)
+  const [localSubtasks, setLocalSubtasks] = useState<Partial<Task>[]>([]);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
+  const generatedIdRef = useRef(crypto.randomUUID());
+
   const [formData, setFormData] = useState<Partial<Task>>({
+    id: generatedIdRef.current,
     nome: '',
     status: 'não iniciada',
     prioridade: 'Baixa',
@@ -65,9 +70,11 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
       }
       setFreqType(fType);
       setFreqDetail(fDetail);
-      setSubtasks(task.subtasks || []);
+      setLocalSubtasks(task.subtasks || []);
     } else {
+      generatedIdRef.current = crypto.randomUUID();
       setFormData({
+        id: generatedIdRef.current,
         nome: '',
         status: 'não iniciada',
         prioridade: 'Baixa',
@@ -81,7 +88,7 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
       });
       setFreqType('');
       setFreqDetail('');
-      setSubtasks([]);
+      setLocalSubtasks([]);
     }
   }, [task, isOpen]);
 
@@ -91,7 +98,24 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
     e.preventDefault();
     setLoading(true);
     try {
-      await saveTask({ ...formData, subtasks });
+      const parentId = formData.id;
+      // 1. Save the parent task
+      await saveTask(formData);
+      
+      // 2. Save all local subtasks
+      for (const st of localSubtasks) {
+        // Inherit everything from parent that isn't explicitly set differently
+        const subtaskToSave = {
+          ...formData, // inherit all parent properties (dimensao, prioridade, etc)
+          ...st,       // overwrite with subtask specific properties (nome, id, completed status, etc)
+          parent_id: parentId, // link to parent
+        };
+        // Clean up some fields that shouldn't be inherited or have special meaning
+        if (!st.status) subtaskToSave.status = formData.status || 'não iniciada';
+        
+        await saveTask(subtaskToSave);
+      }
+      
       onClose();
     } catch (err) {
       alert('Erro ao salvar tarefa: ' + String(err));
@@ -122,17 +146,43 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
     if (e.key === 'Enter') {
       e.preventDefault();
       if (newSubtaskTitle.trim() === '') return;
-      setSubtasks([...subtasks, { id: crypto.randomUUID(), title: newSubtaskTitle.trim(), completed: false }]);
+      
+      const newSubtask: Partial<Task> = {
+        id: crypto.randomUUID(),
+        nome: newSubtaskTitle.trim(),
+        status: 'não iniciada',
+        parent_id: formData.id
+      };
+      
+      setLocalSubtasks([...localSubtasks, newSubtask]);
       setNewSubtaskTitle('');
     }
   };
 
   const toggleSubtask = (id: string) => {
-    setSubtasks(subtasks.map(st => st.id === id ? { ...st, completed: !st.completed } : st));
+    setLocalSubtasks(localSubtasks.map(st => {
+      if (st.id === id) {
+        const isCompleted = st.status === 'completa';
+        return { ...st, status: isCompleted ? 'não iniciada' : 'completa' };
+      }
+      return st;
+    }));
   };
 
-  const deleteSubtask = (id: string) => {
-    setSubtasks(subtasks.filter(st => st.id !== id));
+  const deleteSubtask = async (id: string) => {
+    // If it's an existing subtask, we might need to delete it from DB immediately
+    // but for simplicity, we can just call deleteTask if we know it exists, or just filter it.
+    // Actually, if we filter it, it won't be deleted from DB on save unless we track deleted ones.
+    // Let's just delete it from DB immediately to be safe, then remove from state.
+    if (confirm('Deletar subtarefa?')) {
+      try {
+        await deleteTask(id);
+        setLocalSubtasks(localSubtasks.filter(st => st.id !== id));
+      } catch (err) {
+        // If it wasn't in DB yet, it will throw an error or just fail silently, we can just remove from state
+        setLocalSubtasks(localSubtasks.filter(st => st.id !== id));
+      }
+    }
   };
 
   return (
@@ -276,21 +326,24 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
               <label className="block text-xs text-[#8E8E8E] uppercase tracking-wider mb-2">Sub-tarefas</label>
               <div className="bg-[#121212] border border-[#2D2D2D] rounded-xl p-4">
                 <div className="space-y-2 mb-4 max-h-[150px] overflow-y-auto pr-2">
-                  {subtasks.map(st => (
-                    <div key={st.id} className="flex items-center gap-3 group">
-                      <input 
-                        type="checkbox" 
-                        checked={st.completed} 
-                        onChange={() => toggleSubtask(st.id)}
-                        className="w-4 h-4 rounded-sm border-[#444] bg-[#1a1a1a] checked:bg-[#9D4EDD] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                      />
-                      <span className={`flex-1 text-sm ${st.completed ? 'text-[#8E8E8E] line-through' : 'text-[#E0E0E0]'}`}>{st.title}</span>
-                      <button type="button" onClick={() => deleteSubtask(st.id)} className="text-[#8E8E8E] hover:text-[#db4437] opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="material-symbols-outlined text-[18px]">delete</span>
-                      </button>
-                    </div>
-                  ))}
-                  {subtasks.length === 0 && (
+                  {localSubtasks.map(st => {
+                    const isCompleted = st.status === 'completa';
+                    return (
+                      <div key={st.id} className="flex items-center gap-3 group">
+                        <input 
+                          type="checkbox" 
+                          checked={isCompleted} 
+                          onChange={() => toggleSubtask(st.id as string)}
+                          className="w-4 h-4 rounded-sm border-[#444] bg-[#1a1a1a] checked:bg-[#9D4EDD] focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                        />
+                        <span className={`flex-1 text-sm ${isCompleted ? 'text-[#8E8E8E] line-through' : 'text-[#E0E0E0]'}`}>{st.nome}</span>
+                        <button type="button" onClick={() => deleteSubtask(st.id as string)} className="text-[#8E8E8E] hover:text-[#db4437] opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="material-symbols-outlined text-[18px]">delete</span>
+                        </button>
+                      </div>
+                    );
+                  })}
+                  {localSubtasks.length === 0 && (
                     <div className="text-center text-[#8E8E8E] text-xs py-2">Nenhuma sub-tarefa.</div>
                   )}
                 </div>

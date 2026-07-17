@@ -15,5 +15,5 @@ export interface Task {
   user_id: string;
   ordem_manual?: number;
   is_favorite?: boolean;
-  subtasks?: { id: string; title: string; completed: boolean }[];
+  parent_id?: string | null;
 }

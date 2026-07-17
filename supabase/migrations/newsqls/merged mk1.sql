@@ -260,3 +260,10 @@ ALTER TABLE tasks ADD COLUMN IF NOT EXISTS is_favorite BOOLEAN DEFAULT false;
 
 -- Adiciona a coluna de subtarefas em formato JSONB
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS subtasks JSONB DEFAULT '[]'::jsonb;
+
+-- ==========================================
+-- Migração Mk9: Sub-tarefas Reais
+-- ==========================================
+
+-- Adiciona relação de hierarquia
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS parent_id UUID REFERENCES tasks(id) ON DELETE CASCADE;

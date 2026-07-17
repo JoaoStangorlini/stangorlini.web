@@ -254,11 +254,19 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
     if (!task) return;
 
     const newValue = !task.is_favorite;
-    const updatedTasks = localTasks.map(t => t.id === taskId ? { ...t, is_favorite: newValue } : t);
+    
+    // Find children to cascade the favorite status
+    const children = localTasks.filter(t => t.parent_id === taskId);
+    const taskIdsToUpdate = [taskId, ...children.map(c => c.id)];
+
+    const updatedTasks = localTasks.map(t => taskIdsToUpdate.includes(t.id) ? { ...t, is_favorite: newValue } : t);
     setLocalTasks(updatedTasks);
     
     try {
-      await saveTask({ ...task, is_favorite: newValue });
+      for (const id of taskIdsToUpdate) {
+        const t = localTasks.find(x => x.id === id);
+        if (t) await saveTask({ ...t, is_favorite: newValue });
+      }
     } catch (err: any) {
       alert("Erro ao atualizar favorito: " + err.message);
     }
@@ -283,6 +291,17 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
 
   // Filters UI State
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
+
+  const toggleExpand = (e: React.MouseEvent, taskId: string) => {
+    e.stopPropagation();
+    setExpandedTasks(prev => {
+      const next = new Set(prev);
+      if (next.has(taskId)) next.delete(taskId);
+      else next.add(taskId);
+      return next;
+    });
+  };
 
   // Filters State
   const [localSearchTerm, setLocalSearchTerm] = useState('');
@@ -344,7 +363,9 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
   }, []);
 
   const handleEdit = (task: Task) => {
-    setTaskToEdit(task);
+    // Inject subtasks if this is a parent task
+    const subtasks = localTasks.filter(t => t.parent_id === task.id);
+    setTaskToEdit({ ...task, subtasks } as any);
     setIsModalOpen(true);
   };
 
@@ -528,7 +549,11 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
   const uniqueStatuses = useMemo(() => Array.from(new Set(initialTasks.map(t => t.status).filter(Boolean))) as string[], [initialTasks]);
   const uniqueCategories = useMemo(() => Array.from(new Set(initialTasks.map(t => t.categoria).filter(Boolean))) as string[], [initialTasks]);
   const uniqueUsers = useMemo(() => Array.from(new Set([...initialTasks.map(t => t.responsavel).filter(Boolean), 'Dani', 'Leo'])) as string[], [initialTasks]).sort();
-  const uniqueDimensions = useMemo(() => Array.from(new Set(initialTasks.map(t => t.dimensao).filter(Boolean))) as string[], [initialTasks]).sort();
+  const uniqueDimensions = useMemo(() => {
+    const dims = Array.from(new Set(initialTasks.map(t => t.dimensao).filter(Boolean))) as string[];
+    dims.push('favoritas');
+    return dims.sort();
+  }, [initialTasks]);
 
   const toggleFilter = (list: string[], setList: (l: string[]) => void, value: string) => {
     if (list.includes(value)) {
@@ -564,7 +589,14 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
     }
     // 5. Filter Dimensions
     if (selectedDimensions.length > 0) {
-      tasks = tasks.filter(t => t.dimensao && selectedDimensions.includes(t.dimensao));
+      if (selectedDimensions.includes('favoritas')) {
+        tasks = tasks.filter(t => 
+           (t.is_favorite && selectedDimensions.includes('favoritas')) ||
+           (t.dimensao && selectedDimensions.includes(t.dimensao))
+        );
+      } else {
+        tasks = tasks.filter(t => t.dimensao && selectedDimensions.includes(t.dimensao));
+      }
     }
 
     // 5. Sort
@@ -610,7 +642,26 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
       return dateA - dateB;
     });
 
-    return tasks;
+    const interleaved: Task[] = [];
+    const parentTasks = tasks.filter(t => !t.parent_id);
+    
+    // Group children by parent
+    const childTasksByParent: Record<string, Task[]> = {};
+    for (const t of tasks) {
+      if (t.parent_id) {
+        if (!childTasksByParent[t.parent_id]) childTasksByParent[t.parent_id] = [];
+        childTasksByParent[t.parent_id].push(t);
+      }
+    }
+
+    for (const parent of parentTasks) {
+       interleaved.push(parent);
+       if (expandedTasks.has(parent.id) && childTasksByParent[parent.id]) {
+           interleaved.push(...childTasksByParent[parent.id]);
+       }
+    }
+
+    return interleaved;
   })();
 
   const hasAnyPrazo = processedTasks.some(t => t.prazo);
@@ -892,12 +943,21 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
                   </button>
                 </td>
                 <td className="p-4 text-sm font-medium text-white break-words" title={task.descricao || ''}>
-                  <HighlightedText text={task.nome} highlight={searchTerm} />
-                  {task.descricao && (
-                    <div className="text-[10px] text-[#A0A0A0] mt-1 line-clamp-1">
-                      <HighlightedText text={task.descricao} highlight={searchTerm} />
+                  <div className={`flex items-center gap-2 ${task.parent_id ? 'pl-4 border-l-2 border-[#2D2D2D] ml-2' : ''}`}>
+                    {!task.parent_id && localTasks.some(t => t.parent_id === task.id) && (
+                      <button onClick={(e) => toggleExpand(e, task.id)} className="text-[#8E8E8E] hover:text-white transition-colors flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-[20px]">{expandedTasks.has(task.id) ? 'expand_more' : 'chevron_right'}</span>
+                      </button>
+                    )}
+                    <div className="flex flex-col">
+                      <HighlightedText text={task.nome} highlight={searchTerm} />
+                      {task.descricao && (
+                        <div className="text-[10px] text-[#A0A0A0] mt-1 line-clamp-1">
+                          <HighlightedText text={task.descricao} highlight={searchTerm} />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </td>
                 <td className="p-4" onClick={(e) => handleBadgeClick(e, task, 'status')}><div className="cursor-pointer hover:opacity-80 transition-opacity inline-block" title="Clique para alterar status"><Badge type="status" value={task.status} /></div></td>
                 <td className="p-4"><Badge type="prioridade" value={task.prioridade} /></td>
@@ -923,18 +983,6 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
                 <td className="p-4 text-xs text-[#A0A0A0]">{task.frequencia || '-'}</td>
                 <td className="p-4"><Badge type="dimensao" value={task.dimensao} /></td>
               </tr>
-              {task.subtasks && task.subtasks.length > 0 && task.subtasks.map(st => (
-                <tr key={st.id} className="bg-[#121212]/50 border-b border-[#2D2D2D]/30 group hover:bg-[#252525]">
-                  <td className="p-2 text-center"></td>
-                  <td className="p-2 text-center"></td>
-                  <td className="p-2 text-sm font-medium break-words" colSpan={hasAnyPrazo ? 12 : 11}>
-                    <div className="flex items-center gap-3 pl-4 border-l-2 border-[#2D2D2D] ml-2 h-full py-1">
-                      <input type="checkbox" className="accent-[#9D4EDD] rounded-sm w-3 h-3 opacity-60" checked={st.completed} readOnly />
-                      <span className={`text-[12px] ${st.completed ? 'text-[#8E8E8E] line-through' : 'text-[#C0C0C0]'}`}>{st.title}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
               </React.Fragment>
             ))}
             {processedTasks.length === 0 && (
@@ -973,8 +1021,15 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
               </button>
             </div>
             
-            <div className="pr-16 flex items-start gap-2">
-              <span className={`material-symbols-outlined text-[#8E8E8E] text-[18px] mt-0.5 ${sortBy === 'manual' ? 'cursor-grab' : 'cursor-not-allowed'}`} title={sortBy !== 'manual' ? 'Mude para ordenação Manual para arrastar' : 'Arrastar'}>drag_indicator</span>
+            <div className={`pr-16 flex items-start gap-2 ${task.parent_id ? 'pl-4 border-l-2 border-[#2D2D2D] ml-2' : ''}`}>
+              {!task.parent_id && localTasks.some(t => t.parent_id === task.id) && (
+                <button onClick={(e) => toggleExpand(e, task.id)} className="text-[#8E8E8E] hover:text-white transition-colors flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-[20px]">{expandedTasks.has(task.id) ? 'expand_more' : 'chevron_right'}</span>
+                </button>
+              )}
+              {(!task.parent_id || !localTasks.some(t => t.parent_id === task.id)) && (
+                <span className={`material-symbols-outlined text-[#8E8E8E] text-[18px] mt-0.5 ${sortBy === 'manual' ? 'cursor-grab' : 'cursor-not-allowed'}`} title={sortBy !== 'manual' ? 'Mude para ordenação Manual para arrastar' : 'Arrastar'}>drag_indicator</span>
+              )}
               <div>
                 <h3 className="text-sm font-bold text-white mb-1">
                   <HighlightedText text={task.nome} highlight={searchTerm} />
@@ -1010,19 +1065,23 @@ export function TasksView({ initialTasks: rawInitialTasks }: { initialTasks: Tas
               <span className="truncate flex items-center gap-1">
                 Fim: {formatDate(task.prazo)}
                 {task.prazo && (
-                  <span className="ml-1">
-                    ({(() => {
-                      const days = getDaysUntil(task.prazo);
-                      if (days === null) return '';
-                      if (days < 0) return <span className="text-[#db4437] font-bold">Atrasada</span>;
-                      if (days === 0) return <span className="text-[#db4437] font-bold">Hoje</span>;
-                      return <span className="text-[#FFCC00] font-bold">{days}d</span>;
-                    })()})
-                  </span>
+                  (() => {
+                    const days = getDaysUntil(task.prazo);
+                    if (days === null) return null;
+                    if (days < 0) return <span className="text-[#db4437] font-bold">({-days}d)</span>;
+                    if (days === 0) return <span className="text-[#db4437] font-bold">Hoje!</span>;
+                    return <span className="text-[#FFCC00] font-bold">{days}d</span>;
+                  })()
                 )}
               </span>
               <span className="truncate">Concl: {formatDate(task.concluida_em)}</span>
             </div>
+            {task.descricao && (
+              <div className="mt-2 text-xs text-gray-300">
+                <div className="font-semibold text-gray-500 mb-1">Descrição</div>
+                <div className="whitespace-pre-wrap">{task.descricao}</div>
+              </div>
+            )}
           </div>
         ))}
         {processedTasks.length === 0 && (

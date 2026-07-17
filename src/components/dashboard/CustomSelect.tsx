@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { getBadgeColorClass } from './Badge';
+import { Badge, getBadgeColorClass } from './Badge';
 
 interface Option {
   label: string;
@@ -67,10 +67,10 @@ export function CustomSelect({ name, value, options: initialOptions, onChange, t
     selectedLabel = selectedOption.label;
   }
   
-  // Use badge colors for the selected box
+  // Standard input box look
   const boxClasses = disabled 
     ? "w-full border rounded-md px-4 py-2 opacity-50 cursor-not-allowed bg-[#121212] border-[#2D2D2D] text-[#8E8E8E]"
-    : `w-full border rounded-md px-4 py-2 cursor-pointer focus:outline-none transition-colors flex justify-between items-center ${getBadgeColorClass(type, value)}`;
+    : "w-full border border-[#2D2D2D] rounded-md px-4 py-2 cursor-pointer focus:outline-none transition-colors flex justify-between items-center bg-[#121212] hover:border-[#FFCC00]";
 
   return (
     <div className="relative w-full" ref={containerRef}>
@@ -83,8 +83,10 @@ export function CustomSelect({ name, value, options: initialOptions, onChange, t
           }
         }}
       >
-        <span>{selectedLabel || 'Selecione...'}</span>
-        <span className="material-symbols-outlined text-[18px]">
+        <div>
+          {value ? <Badge type={type} value={selectedLabel} /> : <span className="text-[#8E8E8E]">Selecione...</span>}
+        </div>
+        <span className="material-symbols-outlined text-[18px] text-[#8E8E8E]">
           {isOpen ? 'expand_less' : 'expand_more'}
         </span>
       </div>
@@ -114,15 +116,13 @@ export function CustomSelect({ name, value, options: initialOptions, onChange, t
           ) : (
             <div className="overflow-y-auto">
               {localOptions.map((option) => {
-                const itemColorClass = getBadgeColorClass(type, option.value);
                 return (
                   <div
                     key={option.value}
                     onClick={() => handleSelect(option.value)}
-                    className={`px-4 py-2 cursor-pointer transition-colors border-l-4 hover:border-l-4 hover:brightness-125 ${itemColorClass}`}
-                    style={{ borderLeftColor: 'transparent' }} 
+                    className="px-4 py-2 cursor-pointer transition-colors hover:bg-[#252525] flex items-center"
                   >
-                    {option.label}
+                    <Badge type={type} value={option.label} />
                   </div>
                 );
               })}

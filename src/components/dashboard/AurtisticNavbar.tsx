@@ -11,7 +11,6 @@ import { Browser } from '@capacitor/browser';
 export default function AurtisticNavbar() {
   const [user, setUser] = useState<any>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -85,20 +84,6 @@ export default function AurtisticNavbar() {
       alert("Erro ao importar CSV: " + String(err));
     }
     e.target.value = ''; // Reset input
-  };
-
-  const handleDeleteProfile = async () => {
-    if (!confirm('ATENÇÃO: Você está prestes a excluir PERMANENTEMENTE todas as suas tarefas e seu perfil. Tem certeza disso?')) return;
-    
-    setIsSettingsOpen(false);
-    setIsDeleting(true);
-    try {
-      const { deleteAurtisticProfile } = await import('@/app/(dashboard)/aurtistic/actions');
-      await deleteAurtisticProfile();
-    } catch (err) {
-      alert("Erro ao deletar perfil: " + String(err));
-      setIsDeleting(false);
-    }
   };
 
   const openAuthorProjects = async () => {
@@ -179,14 +164,14 @@ export default function AurtisticNavbar() {
 
                     <div className="h-[1px] bg-[#2D2D2D] my-1" />
 
-                    <button 
-                      onClick={handleDeleteProfile}
-                      disabled={isDeleting}
+                    <Link 
+                      href="/aurtistic/delete-account"
+                      onClick={() => setIsSettingsOpen(false)}
                       className="w-full text-left px-4 py-2 text-sm text-[#db4437] hover:bg-[#db4437]/10 transition-colors flex items-center gap-2"
                     >
                       <span className="material-symbols-outlined text-[18px]">delete_forever</span>
-                      {isDeleting ? 'Excluindo...' : 'Excluir perfil e tarefas'}
-                    </button>
+                      Excluir perfil ou tarefas
+                    </Link>
 
                     <div className="h-[1px] bg-[#2D2D2D] my-1" />
 

@@ -96,3 +96,19 @@ export async function deleteAurtisticProfile() {
   revalidatePath('/', 'layout');
   redirect('/aurtistic/login');
 }
+
+export async function deleteAllTasks() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Usuário não autenticado");
+
+  // Deletar todas as tarefas do usuário logado
+  const { error: tasksError } = await supabase
+    .from('tasks')
+    .delete()
+    .eq('user_id', user.id);
+
+  if (tasksError) throw new Error("Erro ao apagar tarefas: " + tasksError.message);
+
+  revalidatePath('/aurtistic');
+}

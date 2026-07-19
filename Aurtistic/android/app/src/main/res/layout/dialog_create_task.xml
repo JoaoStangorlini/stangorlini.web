@@ -26,6 +26,18 @@
         android:inputType="textCapSentences"
         android:padding="12dp"
         android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/input_task_dimension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dimensão (ex: HUB, USP)"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:inputType="textCapSentences"
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"
         android:layout_marginBottom="20dp" />
 
     <LinearLayout

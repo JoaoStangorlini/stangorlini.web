@@ -180,14 +180,15 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
             
             for (const update of updates) {
               if (update.action === 'create') {
-                const { taskId, taskName } = update;
+                const { taskId, taskName, taskDimension } = update;
                 const newTask = {
                   id: taskId,
                   nome: taskName,
-                  status: 'rascunho',
+                  status: 'não iniciada',
                   is_favorite: true,
                   ordem: 0,
-                  prazo: new Date().toISOString()
+                  prazo: new Date().toISOString(),
+                  dimensao: taskDimension || ''
                 };
                 newTasks.unshift(newTask as any);
                 modified = true;

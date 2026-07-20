@@ -116,14 +116,14 @@ export default function Home() {
             </div> {/* fecha o card gradient */}
 
 
-            {/* Aurtistic Planner Card */}
+            {/* Aurtistic Card */}
             <div className="md:col-span-12 rounded-2xl p-[2px] bg-gradient-to-r from-[#9D4EDD] to-[#FFCC00]">
               <div className="bg-[#1E1E1E] rounded-[14px] flex flex-col md:flex-row items-center justify-between p-8 hover:bg-[#252525] transition-colors gap-6 group">
                 <div className="space-y-4 text-center md:text-left flex-1">
                   <div className="flex items-center justify-center md:justify-start gap-3">
                     <span className="material-symbols-outlined text-4xl text-[#FFCC00]">psychology</span>
                     <h3 className="text-3xl font-['Bukra'] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFCC00] to-[#9D4EDD]">
-                      Aurtistic Planner
+                      Aurtistic
                     </h3>
                   </div>
                   <p className="text-[#A0A0A0] max-w-3xl">Um ecossistema focado e livre de distrações para organização pessoal. Planeje suas tarefas e rotinas no seu próprio ritmo.</p>

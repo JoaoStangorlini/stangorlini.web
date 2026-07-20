@@ -16,7 +16,7 @@ export default function AurtisticLoginPage() {
         {/* Header */}
         <div className="text-center mb-8 flex flex-col items-center">
           <span className="material-symbols-outlined text-[48px] text-[#FFCC00] mb-2">psychology</span>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Aurtistic Planner</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Aurtistic</h1>
           <p className="text-[#8E8E8E] mt-2 text-sm">Seu espaço pessoal livre de distrações.</p>
         </div>
 

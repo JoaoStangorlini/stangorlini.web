@@ -41,7 +41,7 @@ export default async function AurtisticPage() {
       <div className="mb-4 md:mb-6 shrink-0">
         <h1 className="text-2xl font-bold text-[#FFCC00]">
           <span className="material-symbols-outlined align-middle mr-2">psychology</span>
-          Aurtistic Planner
+          Aurtistic
         </h1>
         <p className="text-sm text-[#8E8E8E] mt-1 mb-4">Seu espaço pessoal isolado e livre de distrações.</p>
         <AurtisticQuickLinks initialLinks={profile?.quick_links || []} />

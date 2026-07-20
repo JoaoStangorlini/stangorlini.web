@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.stangorlini.aurtistic',
-  appName: 'Aurtistic Planner',
+  appName: 'Aurtistic',
   webDir: 'public',
   server: {
     url: 'https://stangorliniweb.vercel.app/aurtistic',

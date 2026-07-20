@@ -76,7 +76,11 @@ export default function DeleteAccountPage() {
     setIsDeletingProfile(true);
     try {
       await deleteAurtisticProfile();
-    } catch (err) {
+    } catch (err: any) {
+      if (err?.message?.includes('NEXT_REDIRECT') || String(err).includes('NEXT_REDIRECT')) {
+        // O Next.js usa erros para lidar com redirecionamentos (redirect), então ignoramos aqui
+        return;
+      }
       alert("Erro ao deletar perfil: " + String(err));
       setIsDeletingProfile(false);
     }

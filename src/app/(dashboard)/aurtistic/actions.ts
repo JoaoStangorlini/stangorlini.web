@@ -7,16 +7,33 @@ import { createClient } from '@/utils/supabase/server';
 export async function loginAurtistic(formData: FormData) {
   const supabase = await createClient();
 
-  const username = (formData.get('username') as string)?.trim() || '';
+  const rawInput = (formData.get('username') as string)?.trim() || '';
   const password = formData.get('password') as string;
   
-  // Transformar usuário em email falso para o Supabase
-  const email = `${username}@aurtistic.local`;
+  let email = '';
+
+  if (rawInput.includes('@')) {
+    // Se o usuário digitou um email (ex: admin), usamos diretamente
+    email = rawInput;
+  } else {
+    // Transformar usuário em email falso para o Supabase (sanitizado)
+    const sanitizedUsername = rawInput
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9_]/g, "")
+      .toLowerCase();
+      
+    if (!sanitizedUsername) {
+      redirect(`/aurtistic/login?error=${encodeURIComponent('Usuário inválido.')}`);
+    }
+
+    email = `${sanitizedUsername}@aurtistic.local`;
+  }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect('/aurtistic/login?error=Credenciais inválidas');
+    redirect(`/aurtistic/login?error=${encodeURIComponent('Credenciais inválidas')}`);
   }
 
   revalidatePath('/aurtistic', 'layout');
@@ -31,11 +48,21 @@ export async function signupAurtistic(formData: FormData) {
   const confirmPassword = formData.get('confirmPassword') as string;
 
   if (password !== confirmPassword) {
-    redirect('/aurtistic/login?error=As senhas não coincidem.');
+    redirect(`/aurtistic/login?error=${encodeURIComponent('As senhas não coincidem.')}`);
   }
 
-  // Transformar usuário em email falso para o Supabase
-  const email = `${username}@aurtistic.local`;
+  // Transformar usuário em email falso para o Supabase (sanitizado)
+  const sanitizedUsername = username
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9_]/g, "")
+    .toLowerCase();
+    
+  if (!sanitizedUsername) {
+    redirect(`/aurtistic/login?error=${encodeURIComponent('Usuário inválido. Use apenas letras e números.')}`);
+  }
+
+  const email = `${sanitizedUsername}@aurtistic.local`;
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -49,7 +76,7 @@ export async function signupAurtistic(formData: FormData) {
   });
 
   if (error) {
-    redirect('/aurtistic/login?error=Erro ao criar conta: ' + error.message);
+    redirect(`/aurtistic/login?error=${encodeURIComponent('Erro ao criar conta: ' + error.message)}`);
   }
 
   // Ensure user_profile exists if sign up is confirmed directly

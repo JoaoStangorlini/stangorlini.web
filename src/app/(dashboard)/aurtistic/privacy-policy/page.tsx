@@ -39,6 +39,19 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#FFCC00]">public</span>
+              Dados Públicos e Portfólio (Adequação à LGPD)
+            </h2>
+            <p className="leading-relaxed mb-4 text-[#A0A0A0]">
+              O Aurtistic possui módulos de criação de página de perfil/portfólio. Ao preencher os campos nas abas de <strong>Resumo</strong>, <strong>Currículo</strong> e <strong>Portfólio</strong> (incluindo informações de contato como telefone e e-mail), você compreende e consente que a finalidade destes dados é a exibição pública na sua URL personalizada (ex: <code>aurtistic.com/seu-usuario</code>) para contatos profissionais.
+            </p>
+            <p className="leading-relaxed text-[#A0A0A0]">
+              Estes dados do portfólio não são criptografados de ponta-a-ponta, pois precisam ser lidos e renderizados publicamente. Eles não são vendidos ou utilizados para marketing de terceiros. Se você não deseja que seu telefone ou e-mail fiquem públicos, basta deixá-los em branco. Você tem o controle total para editar ou apagar permanentemente essas informações a qualquer momento no seu painel ou através da "Área de Exclusão".
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined text-[#9D4EDD]">download</span>
               Exportação e Portabilidade
             </h2>

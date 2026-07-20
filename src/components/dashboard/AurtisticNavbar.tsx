@@ -4,17 +4,27 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { logoutAurtistic } from '@/app/(dashboard)/aurtistic/actions';
 import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
 
 export default function AurtisticNavbar() {
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
+
+  useEffect(() => {
+    if (user) {
+      supabase.from('user_profiles').select('*').eq('id', user.id).single().then(({ data }) => {
+        if (data) setProfile(data);
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -101,47 +111,75 @@ export default function AurtisticNavbar() {
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
 
+  const tabMetadata: Record<string, { name: string; href: string }> = {
+    tasks: { name: 'Tarefas', href: '/aurtistic' },
+    resumo: { name: 'Resumo', href: '/aurtistic/resumo' },
+    curriculo: { name: 'Currículo', href: '/aurtistic/curriculo' },
+    portfolio: { name: 'Portfólio', href: '/aurtistic/portfolio' }
+  };
+
+  const activeTabs = profile?.features_config?.active || ['tasks', 'resumo', 'curriculo', 'portfolio'];
+  const orderedTabs = profile?.features_config?.order || ['tasks', 'resumo', 'curriculo', 'portfolio'];
+  const visibleTabs = orderedTabs.filter((t: string) => activeTabs.includes(t));
+
   return (
     <header className="sticky top-0 w-full z-50 bg-[#121212]/90 backdrop-blur-xl border-b border-[#2D2D2D] shrink-0">
       <div className="flex justify-between items-center px-4 md:px-6 py-4 max-w-7xl mx-auto w-full gap-4">
         
         {/* Left: Logo */}
         <div className="flex justify-start items-center gap-2">
-          <Link href="/aurtistic" className="flex items-center">
+          <Link href="/aurtistic" className="flex items-center gap-3">
             <Image 
-              src="/feature_graphic_final.png" 
+              src="/aurtistic-icon.png" 
               alt="Aurtistic Logo" 
-              width={160} 
-              height={78}
-              className="h-8 md:h-10 w-auto object-contain"
+              width={40} 
+              height={40}
+              className="h-8 w-8 md:h-10 md:w-10 object-contain"
             />
+            <span className="font-['Bukra'] font-black text-lg md:text-xl text-white tracking-tight">Aurtistic</span>
           </Link>
         </div>
 
-        {/* Center: Outros Projetos */}
-        <div className="flex justify-center items-center flex-1">
-          <button 
-            onClick={openAuthorProjects}
-            className="text-[#8E8E8E] hover:text-[#FFCC00] font-bold text-xs md:text-sm transition-colors flex items-center gap-1 md:gap-2"
-            title="Outros projetos do autor"
-          >
-            <span className="material-symbols-outlined text-[16px] md:text-[18px]">open_in_new</span>
-            <span className="md:hidden whitespace-nowrap">Mais do autor</span>
-            <span className="hidden md:inline whitespace-nowrap">Outros projetos do autor</span>
-          </button>
-        </div>
+        {/* Center: Dynamic Navigation Links */}
+        <nav className="hidden md:flex justify-center gap-4 lg:gap-8 items-center flex-1 mx-4">
+          {visibleTabs.map((key: string) => {
+            const tab = tabMetadata[key];
+            if (!tab) return null;
+            const isActive = pathname === tab.href;
+            return (
+              <Link 
+                key={key}
+                href={tab.href}
+                className={`font-medium transition-colors ${
+                  isActive 
+                    ? 'text-[#9D4EDD] font-bold border-b-[3px] border-[#FFCC00] pb-1' 
+                    : 'text-[#A0A0A0] hover:text-[#9D4EDD]'
+                }`}
+              >
+                {tab.name}
+              </Link>
+            );
+          })}
+        </nav>
 
-        {/* Right: Auth State */}
+        {/* Right: Auth State / Settings Dropdown */}
         <div className="flex justify-end items-center gap-4">
           {user ? (
             <div className="relative" ref={dropdownRef}>
-              <button 
+              <div 
                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-[#2D2D2D] transition-colors"
+                className="flex items-center gap-2 pl-1 pr-3 py-1.5 rounded-full border border-[#2D2D2D] bg-[#1A1A1A] hover:border-[#9D4EDD] hover:bg-[#9D4EDD]/10 transition-colors cursor-pointer shrink-0"
               >
-                <span className="text-[#A0A0A0] text-sm hidden sm:inline">Olá, <strong className="text-white">{displayName}</strong></span>
-                <span className="material-symbols-outlined text-[20px] text-[#8E8E8E] hover:text-white transition-colors">settings</span>
-              </button>
+                <div className="w-7 h-7 rounded-full overflow-hidden bg-[#2D2D2D] flex items-center justify-center border border-[#FFCC00] shrink-0">
+                  {user?.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="material-symbols-outlined text-[16px] text-white">person</span>
+                  )}
+                </div>
+                <span className="text-white text-xs font-bold uppercase tracking-wider hidden sm:inline">{displayName}</span>
+                <span className="w-2 h-2 rounded-full bg-[#FFCC00]"></span>
+              </div>
 
               {isSettingsOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg shadow-xl overflow-hidden py-1 z-50">
@@ -204,3 +242,4 @@ export default function AurtisticNavbar() {
     </header>
   );
 }
+

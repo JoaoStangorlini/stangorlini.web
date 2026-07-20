@@ -265,11 +265,124 @@ export async function getUserProfile() {
     return null;
   }
 
+  const joaoCV = {
+    name: 'João Paulo Stangorlini de Carvalho',
+    role: 'Estudante de Física (USP) | Desenvolvedor | Fotógrafo | Educador | Designer',
+    phone: '(11) 967840-1823',
+    email: 'joaopaulostangorlini@usp.br',
+    address: 'Rua Arthur Soter Lopes da Silva, 88',
+    github: '/JoaoStangorlini',
+    summary: 'Estudante de Física no Instituto de Física (USP - Butantã) com perfil voltado à tecnologia e educação. Experiência prática em desenvolvimento Web (PWA), design (web e gráfico), otimização, manutenção e montagem de hardware de alta performance, sala de aula e monitorias em ambientes de difusão científica/inovação. Experiência básica de cálculo e execução de instalações elétricas (residenciais).',
+    experiences: [
+      {
+        role: 'Monitor de Inovação e Tecnologias Imersivas',
+        company: 'DigiLab (Inova USP)',
+        period: '2025 - Presente',
+        bullets: [
+          'Operação e Suporte em VR/AR: Mediação técnica em experiências de Realidade Virtual e Aumentada.',
+          'Troubleshooting em Tempo Real: Resolução de falhas de hardware e software sob pressão durante eventos.',
+          'Estudo de Sistemas Imersivos: Pesquisa sobre o funcionamento físico e técnico de dispositivos de VR.',
+          'Atendimento Bilíngue: Suporte técnico e conversação em Inglês para visitantes.'
+        ]
+      },
+      {
+        role: 'Monitor de Difusão Científica',
+        company: 'Parque CienTec – USP',
+        period: '2024 - 2025',
+        bullets: [
+          'Comunicação científica e mediação de experimentos de Física e Astronomia.',
+          'Adaptação de conceitos complexos para diversos níveis de público.',
+          'Desenvolvimento de planos de aulas e planejamento de possíveis novas atividades.'
+        ]
+      }
+    ],
+    education: [
+      {
+        institution: 'Instituto de Física da Universidade de São Paulo (USP)',
+        period: '2024 - 2029',
+        degree: 'Licenciatura em Física (em andamento)',
+        bullets: [
+          'Bolsista PAPFE (apoio à permanência e formação estudantil).',
+          'Bolsista PUB (Programa Unificado de Bolsas) – Atuação no parque de Ciências e tecnologia USP Cientec.',
+          'Projetos AEX (Apoio à Extensão): Atuação no Digital Lab / Inova USP e palestrante no programa "De Volta à Escola | Eu na USP".'
+        ]
+      }
+    ],
+    skills: ['HTML5', 'CSS3', 'JavaScript', 'TypeScript', 'React.js', 'Next.js', 'SQL', 'Git & GitHub', 'Física Geral', 'Design Gráfico', 'Montagem de Hardware', 'Inglês Intermediário']
+  };
+
+  const joaoResumo = {
+    tagline: 'FOTÓGRAFO & DEV & FÍSICO',
+    title: 'JOÃO PAULO STANGORLINI',
+    subtitle: 'Focando em pesquisa científica, desenvolvimento full-stack e organização acadêmica através do Aurtistic.',
+    button1_text: 'Agendar Reunião',
+    button1_url: 'https://calendar.app.google/tELr1q8ky4G98EL58',
+    button2_text: 'Ver GitHub',
+    button2_url: 'https://github.com/JoaoStangorlini',
+    profile_image_url: '/perfil.jpeg',
+    description: 'Estudante de Física no Instituto de Física (USP - Butantã) com perfil voltado à tecnologia e educação. Experiência prática em desenvolvimento Web (PWA), design (web e gráfico), otimização, manutenção e montagem de hardware de alta performance.'
+  };
+
+  const joaoPortfolio = [
+    {
+      title: 'HUB LabDiv',
+      description: 'Plataforma completa de comunicação e difusão científica do IFUSP, com fluxo de informações e artes integradas.',
+      link: 'https://hub-lab-div.vercel.app',
+      tags: ['PWA', 'Next.js', 'Supabase', 'TailwindCSS'],
+      image_url: '/labdiv-logo.png'
+    },
+    {
+      title: 'Aurtistic',
+      description: 'Um gerenciador pessoal completo de tarefas e rotinas acadêmicas, focado em organização e produtividade sem distrações.',
+      link: '/aurtistic',
+      tags: ['SaaS', 'Capacitor', 'Supabase', 'React'],
+      image_url: '/aurtistic-icon.png'
+    }
+  ];
+
   if (!data) {
     // Create one if it doesn't exist
-    const newProfile = { id: user.id, quick_links: [], quick_filters: ['responsavel', 'dimensao'], quick_sorts: ['status', 'prazo', 'prioridade', 'manual'] };
+    const newProfile = { 
+      id: user.id, 
+      quick_links: [], 
+      quick_filters: ['responsavel', 'dimensao'], 
+      quick_sorts: ['status', 'prazo', 'prioridade', 'manual'],
+      features_config: {
+        active: ["tasks", "resumo", "curriculo", "portfolio"],
+        order: ["tasks", "resumo", "curriculo", "portfolio"],
+        layout_style: "default"
+      },
+      resumo: user.id === 'f2f1e6c9-a178-433f-9d87-37d6ce7ec94e' ? JSON.stringify(joaoResumo) : null,
+      curriculo: user.id === 'f2f1e6c9-a178-433f-9d87-37d6ce7ec94e' ? joaoCV : [],
+      portfolio: user.id === 'f2f1e6c9-a178-433f-9d87-37d6ce7ec94e' ? joaoPortfolio : []
+    };
     await supabase.from('user_profiles').insert(newProfile);
     return newProfile;
+  }
+
+  // Se já existe mas está sem as informações do João (ex: acabaram de rodar a migração e colunas estão nulas)
+  if (data && user.id === 'f2f1e6c9-a178-433f-9d87-37d6ce7ec94e') {
+    let updated = false;
+    const updates: any = {};
+    if (!data.curriculo || (Array.isArray(data.curriculo) && data.curriculo.length === 0)) {
+      updates.curriculo = joaoCV;
+      data.curriculo = joaoCV;
+      updated = true;
+    }
+    if (!data.resumo) {
+      const str = JSON.stringify(joaoResumo);
+      updates.resumo = str;
+      data.resumo = str;
+      updated = true;
+    }
+    if (!data.portfolio || (Array.isArray(data.portfolio) && data.portfolio.length === 0)) {
+      updates.portfolio = joaoPortfolio;
+      data.portfolio = joaoPortfolio;
+      updated = true;
+    }
+    if (updated) {
+      await supabase.from('user_profiles').update(updates).eq('id', user.id);
+    }
   }
 
   return data;
@@ -308,5 +421,29 @@ export async function saveQuickPreferences(quickFilters: string[], quickSorts: s
   revalidatePath('/servidor');
   revalidatePath('/aurtistic');
   revalidatePath('/tarefas');
+  revalidatePath('/');
+}
+
+export async function saveUserProfileData(profileData: {
+  resumo?: string | null;
+  curriculo?: any;
+  portfolio?: any;
+  features_config?: any;
+}) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Usuário não autenticado");
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .update(profileData)
+    .eq('id', user.id);
+
+  if (error) {
+    console.error("Erro ao salvar perfil do usuário:", error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/aurtistic');
   revalidatePath('/');
 }

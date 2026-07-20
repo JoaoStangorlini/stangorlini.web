@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
               Seus Dados, Seu Controle
             </h2>
             <p className="leading-relaxed mb-4 text-[#A0A0A0]">
-              O Aurtistic Planner foi construído com a premissa fundamental de que os seus dados pertencem exclusivamente a você. Nosso objetivo é fornecer uma ferramenta de organização eficiente, segura e livre de distrações, sem a coleta desnecessária de informações pessoais.
+              O Aurtistic foi construído com a premissa fundamental de que os seus dados pertencem exclusivamente a você. Nosso objetivo é fornecer uma ferramenta de organização eficiente, segura e livre de distrações, sem a coleta desnecessária de informações pessoais.
             </p>
             <p className="leading-relaxed text-[#A0A0A0]">
               As contas criadas no Aurtistic utilizam identificadores locais gerados no momento do cadastro. Não solicitamos dados de contato reais, documentos, ou informações de rastreamento.
@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
               Exportação e Portabilidade
             </h2>
             <p className="leading-relaxed text-[#A0A0A0]">
-              A qualquer momento você tem a liberdade de baixar todas as suas tarefas do Aurtistic Planner. Para isso, acesse o menu <strong>Configurações da Conta &gt; Baixar tarefas (CSV)</strong>. Com esse arquivo, você pode levar seus dados para o Excel, Google Sheets, Notion ou qualquer outro aplicativo da sua preferência.
+              A qualquer momento você tem a liberdade de baixar todas as suas tarefas do Aurtistic. Para isso, acesse o menu <strong>Configurações da Conta &gt; Baixar tarefas (CSV)</strong>. Com esse arquivo, você pode levar seus dados para o Excel, Google Sheets, Notion ou qualquer outro aplicativo da sua preferência.
             </p>
           </section>
 
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
               Exclusão da Conta
             </h2>
             <p className="leading-relaxed mb-4 text-[#A0A0A0]">
-              Nós não mantemos os seus dados como reféns. Se você decidir deixar de usar o Aurtistic Planner, você pode apagar a sua conta permanentemente através do botão <strong>"Excluir perfil e tarefas"</strong> no menu de configurações.
+              Nós não mantemos os seus dados como reféns. Se você decidir deixar de usar o Aurtistic, você pode apagar a sua conta permanentemente através do botão <strong>"Excluir perfil e tarefas"</strong> no menu de configurações.
             </p>
             <p className="leading-relaxed text-[#A0A0A0]">
               <strong>Aviso Importante:</strong> Esta ação é imediata, irreversível e destrutiva. Ao confirmar a exclusão, todos os seus dados e o seu perfil são fisicamente deletados do banco de dados na mesma hora, sem backups retidos para recuperação. Recomendamos exportar as tarefas antes de tomar essa decisão.

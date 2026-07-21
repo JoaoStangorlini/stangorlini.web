@@ -8,10 +8,12 @@ import { BulkEditModal } from './BulkEditModal';
 import { OptionsEditorModal } from './OptionsEditorModal';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { updateTaskOrders, saveTask, deleteMultipleTasks, updateMultipleTasks, saveTaskColumn } from '@/app/(dashboard)/actions';
+import { updateTaskOrders, saveTaskColumn } from '@/app/(dashboard)/actions';
+import { saveTask, deleteMultipleTasks, updateMultipleTasks } from '@/lib/offlineActions';
 import { Preferences } from '@capacitor/preferences';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
+import { saveTasksToCache, getTasksFromCache, getMutations, removeMutation } from '@/lib/offlineSync';
 import { syncTaskNotifications } from '@/lib/notifications';
 import { downloadICS } from '@/utils/ics';
 import { downloadCSV } from '@/utils/csv';
@@ -98,8 +100,42 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
   const [localTasks, setLocalTasks] = useState(initialTasks);
   
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLocalTasks(initialTasks);
+    const syncOffline = async () => {
+      if (window.navigator.onLine) {
+        // We are online. The initialTasks from server are fresh.
+        setLocalTasks(initialTasks);
+        await saveTasksToCache(initialTasks);
+        
+        // Check if we have pending mutations
+        const mutations = await getMutations();
+        if (mutations.length > 0) {
+          console.log('Processing offline mutations...', mutations);
+          for (const m of mutations) {
+            try {
+              if (m.type === 'update') await saveTask(m.payload);
+              if (m.type === 'delete') await deleteMultipleTasks([m.taskId]);
+              await removeMutation(m.id);
+            } catch (e) {
+              console.error('Failed to sync mutation', m, e);
+            }
+          }
+        }
+      } else {
+        // We are offline. Load from cache.
+        const cached = await getTasksFromCache();
+        if (cached && cached.length > 0) {
+          setLocalTasks(cached);
+        } else {
+          setLocalTasks(initialTasks);
+        }
+      }
+    };
+
+    syncOffline();
+
+    const handleOnline = () => syncOffline();
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
   }, [initialTasks]);
 
   // Sync Favorites to Native Android Widget

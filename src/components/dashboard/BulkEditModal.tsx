@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Task, TaskColumn } from '@/types';
-import { updateMultipleTasks, deleteMultipleTasks } from '@/app/(dashboard)/actions';
+import { updateMultipleTasks, deleteMultipleTasks } from '@/lib/offlineActions';
 import { getBadgeColorClass } from './Badge';
 import { CustomSelect } from './CustomSelect';
 import { downloadICS } from '@/utils/ics';

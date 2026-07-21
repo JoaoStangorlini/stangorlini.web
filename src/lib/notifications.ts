@@ -23,6 +23,16 @@ export const syncTaskNotifications = async (tasks: Task[]) => {
       if (request.display !== 'granted') return;
     }
 
+    // Create a default channel for Android 8.0+
+    await LocalNotifications.createChannel({
+      id: 'default',
+      name: 'Lembretes de Tarefas',
+      description: 'Avisos sobre tarefas urgentes e resumos diários',
+      importance: 4, // High importance
+      visibility: 1, // Public
+      vibration: true
+    });
+
     // Cancel all pending notifications so we can re-schedule them fresh
     const pending = await LocalNotifications.getPending();
     if (pending.notifications.length > 0) {
@@ -44,7 +54,8 @@ export const syncTaskNotifications = async (tasks: Task[]) => {
           body: `Sua tarefa "${task.nome}" vence em 1 hora.`,
           id: getNumericId(task.id + '_1h'),
           schedule: { at: oneHourBefore },
-          smallIcon: 'ic_stat_name'
+          smallIcon: 'ic_stat_name',
+          channelId: 'default'
         });
       }
     });
@@ -99,7 +110,8 @@ export const syncTaskNotifications = async (tasks: Task[]) => {
               body: bodyText,
               id: getNumericId('summary_' + dateStr + time.id_suffix),
               schedule: { at: scheduleDate },
-              smallIcon: 'ic_stat_name'
+              smallIcon: 'ic_stat_name',
+              channelId: 'default'
             });
           }
         }
@@ -107,6 +119,16 @@ export const syncTaskNotifications = async (tasks: Task[]) => {
     }
 
     if (notificationsToSchedule.length > 0) {
+      // Test notification for immediate feedback 10 seconds from now
+      notificationsToSchedule.push({
+        title: 'Notificações Ativas!',
+        body: 'O Aurtistic está configurado para te avisar das tarefas.',
+        id: getNumericId('test_' + Date.now()),
+        schedule: { at: new Date(Date.now() + 10000) },
+        smallIcon: 'ic_stat_name',
+        channelId: 'default'
+      });
+
       await LocalNotifications.schedule({ notifications: notificationsToSchedule });
     }
     console.log(`[Notifications] Synced ${notificationsToSchedule.length} notifications`);

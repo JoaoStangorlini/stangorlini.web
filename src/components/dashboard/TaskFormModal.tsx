@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Task, TaskColumn } from '@/types';
-import { saveTask, deleteTask } from '@/app/(dashboard)/actions';
+import { saveTask, deleteTask } from '@/lib/offlineActions';
 import { getBadgeColorClass } from './Badge';
 import { CustomSelect } from './CustomSelect';
 
@@ -151,7 +151,7 @@ export function TaskFormModal({ isOpen, onClose, task, uniqueCategories, uniqueD
         return;
       }
       
-      const { saveTask } = await import('@/app/(dashboard)/actions');
+      const { saveTask } = await import('@/lib/offlineActions');
       for (const t of tasks) {
         await saveTask({ ...t, user_id: formData.user_id });
       }

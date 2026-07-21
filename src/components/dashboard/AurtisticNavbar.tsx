@@ -97,7 +97,7 @@ export default function AurtisticNavbar() {
         return;
       }
       
-      const { saveTask } = await import('@/app/(dashboard)/actions');
+      const { saveTask } = await import('@/lib/offlineActions');
       for (const t of tasks) {
         await saveTask({ ...t, user_id: user.id });
       }

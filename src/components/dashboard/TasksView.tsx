@@ -6,6 +6,7 @@ import { Badge, getBadgeColorClass } from './Badge';
 import { TaskFormModal } from './TaskFormModal';
 import { BulkEditModal } from './BulkEditModal';
 import { OptionsEditorModal } from './OptionsEditorModal';
+import TaskCalendar from './TaskCalendar';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { updateTaskOrders, saveTaskColumn } from '@/app/(dashboard)/actions';
@@ -87,6 +88,8 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
   const globalQuery = searchParams.get('q') || '';
   
   const [columns, setColumns] = useState<TaskColumn[]>(initialColumns);
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
+  const [calendarCurrentDate, setCalendarCurrentDate] = useState(new Date());
   
   // Normalizar os dados que vêm do banco (migração temporária na UI)
   const initialTasks = useMemo(() => 
@@ -1034,9 +1037,23 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
             );
           })}
 
-          {/* Titulo Tarefas */}
-          <div className="w-full flex items-center justify-between mt-4 mb-2">
+          {/* Titulo Tarefas e View Mode */}
+          <div className="w-full flex items-center justify-between mt-4 mb-2 border-b border-[#2D2D2D] pb-2">
             <h2 className="text-sm font-bold text-[#8E8E8E] uppercase tracking-wider">Tarefas</h2>
+            <div className="flex bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${viewMode === 'list' ? 'bg-[#333333] text-white' : 'text-[#8E8E8E] hover:text-white'}`}
+              >
+                Lista
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${viewMode === 'calendar' ? 'bg-[#333333] text-white' : 'text-[#8E8E8E] hover:text-white'}`}
+              >
+                Calendário
+              </button>
+            </div>
           </div>
 
           {/* Row 4: Botão de Filtros */}
@@ -1250,7 +1267,9 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
       </div>
 
 
-      {/* Desktop View (Table) */}
+      {viewMode === 'list' ? (
+        <>
+          {/* Desktop View (Table) */}
       <div ref={desktopContainerRef} style={{ overflowAnchor: 'none' }} className="hidden md:block overflow-x-auto bg-[#1A1A1A] border border-[#2D2D2D] rounded-lg relative">
         <table className="w-full text-left border-collapse min-w-[1400px]">
           <thead className="bg-[#252525] border-b border-[#2D2D2D] sticky top-0 z-10">
@@ -1469,6 +1488,15 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
           </div>
         )}
       </div>
+      </>
+      ) : (
+        <TaskCalendar
+          tasks={processedTasks}
+          currentDate={calendarCurrentDate}
+          onDateChange={setCalendarCurrentDate}
+          onTaskClick={handleEdit}
+        />
+      )}
 
       {/* Floating Bulk Edit Button (Visible only when tasks are selected) */}
       {selectedTasks.size > 0 && (

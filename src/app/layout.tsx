@@ -10,7 +10,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Stangorlini.web",
+  title: "Aurtistic",
   description: "Gerenciador de Tarefas e Projetos",
 };
 

@@ -119,16 +119,6 @@ export const syncTaskNotifications = async (tasks: Task[]) => {
     }
 
     if (notificationsToSchedule.length > 0) {
-      // Test notification for immediate feedback 10 seconds from now
-      notificationsToSchedule.push({
-        title: 'Notificações Ativas!',
-        body: 'O Aurtistic está configurado para te avisar das tarefas.',
-        id: getNumericId('test_' + Date.now()),
-        schedule: { at: new Date(Date.now() + 10000) },
-        smallIcon: 'ic_stat_name',
-        channelId: 'default'
-      });
-
       await LocalNotifications.schedule({ notifications: notificationsToSchedule });
     }
     console.log(`[Notifications] Synced ${notificationsToSchedule.length} notifications`);

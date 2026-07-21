@@ -374,11 +374,11 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
   const [isColumnsMenuOpen, setIsColumnsMenuOpen] = useState(false);
   const columnsMenuRef = useRef<HTMLDivElement>(null);
 
-  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
+  const [collapsedTasks, setCollapsedTasks] = useState<Set<string>>(new Set());
 
   const toggleExpand = (e: React.MouseEvent, taskId: string) => {
     e.stopPropagation();
-    setExpandedTasks(prev => {
+    setCollapsedTasks(prev => {
       const next = new Set(prev);
       if (next.has(taskId)) next.delete(taskId);
       else next.add(taskId);
@@ -854,7 +854,7 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
 
     for (const parent of parentTasks) {
        interleaved.push(parent);
-       if (expandedTasks.has(parent.id) && childTasksByParent[parent.id]) {
+       if (!collapsedTasks.has(parent.id) && childTasksByParent[parent.id]) {
            interleaved.push(...childTasksByParent[parent.id]);
        }
     }
@@ -1332,7 +1332,7 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
                   <div className={`flex items-center gap-2 ${task.parent_id ? 'pl-4 border-l-2 border-[#2D2D2D] ml-2' : ''}`}>
                     {!task.parent_id && localTasks.some(t => t.parent_id === task.id) && (
                       <button onClick={(e) => toggleExpand(e, task.id)} className="text-[#8E8E8E] hover:text-white transition-colors flex items-center justify-center shrink-0">
-                        <span className="material-symbols-outlined text-[20px]">{expandedTasks.has(task.id) ? 'expand_more' : 'chevron_right'}</span>
+                        <span className="material-symbols-outlined text-[20px]">{!collapsedTasks.has(task.id) ? 'expand_more' : 'chevron_right'}</span>
                       </button>
                     )}
                     <div className="flex flex-col">
@@ -1416,7 +1416,7 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
             <div className={`pr-16 flex items-start gap-2 ${task.parent_id ? 'pl-4 border-l-2 border-[#2D2D2D] ml-2' : ''}`}>
               {!task.parent_id && localTasks.some(t => t.parent_id === task.id) && (
                 <button onClick={(e) => toggleExpand(e, task.id)} className="text-[#8E8E8E] hover:text-white transition-colors flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="material-symbols-outlined text-[20px]">{expandedTasks.has(task.id) ? 'expand_more' : 'chevron_right'}</span>
+                  <span className="material-symbols-outlined text-[20px]">{!collapsedTasks.has(task.id) ? 'expand_more' : 'chevron_right'}</span>
                 </button>
               )}
               {(!task.parent_id || !localTasks.some(t => t.parent_id === task.id)) && (

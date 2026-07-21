@@ -159,17 +159,21 @@ export function BulkEditModal({ isOpen, onClose, taskIds, tasks, onSuccess, uniq
     { label: 'Nacky', value: 'Nacky' }
   ]);
 
-  const categoriaOptions = getColumnOptions('categoria', 
-    (uniqueCategories && uniqueCategories.length > 0) 
-      ? [{label: 'Nenhuma', value: ''}, ...uniqueCategories.filter(c => c).map(c => ({label: c, value: c}))]
-      : []
-  );
+  const baseCategoriaOptions = getColumnOptions('categoria', []);
+  const extraCategoriaOptions = (uniqueCategories || [])
+    .filter(c => c && !baseCategoriaOptions.some(o => o.value === c))
+    .map(c => ({ label: c, value: c }));
+  const categoriaOptions = baseCategoriaOptions.length > 0
+    ? [...baseCategoriaOptions, ...extraCategoriaOptions]
+    : (extraCategoriaOptions.length > 0 ? [{label: 'Nenhuma', value: ''}, ...extraCategoriaOptions] : []);
 
-  const dimensaoOptions = getColumnOptions('dimensao',
-    (uniqueDimensions && uniqueDimensions.length > 0)
-      ? [{label: 'Nenhuma', value: ''}, ...uniqueDimensions.filter(d => d !== 'favoritas' && d).map(d => ({label: d, value: d}))]
-      : []
-  );
+  const baseDimensaoOptions = getColumnOptions('dimensao', []);
+  const extraDimensaoOptions = (uniqueDimensions || [])
+    .filter(d => d && d !== 'favoritas' && !baseDimensaoOptions.some(o => o.value === d))
+    .map(d => ({ label: d, value: d }));
+  const dimensaoOptions = baseDimensaoOptions.length > 0
+    ? [...baseDimensaoOptions, ...extraDimensaoOptions]
+    : (extraDimensaoOptions.length > 0 ? [{label: 'Nenhuma', value: ''}, ...extraDimensaoOptions] : []);
 
   const handleEditCol = (key: string) => {
     if (!onEditColumn) return;

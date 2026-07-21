@@ -101,6 +101,11 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
   [rawInitialTasks]);
   
   const [localTasks, setLocalTasks] = useState(initialTasks);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [isBulkEditModalOpen, setIsBulkEditModalOpen] = useState(false);
+  const [editingColumn, setEditingColumn] = useState<TaskColumn | null>(null);
   
   useEffect(() => {
     const syncOffline = async () => {
@@ -288,11 +293,6 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
   const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
   const isAurtistic = pathname?.includes('aurtistic');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
-
-  const [isBulkEditModalOpen, setIsBulkEditModalOpen] = useState(false);
-  const [editingColumn, setEditingColumn] = useState<TaskColumn | null>(null);
 
   const [quickEdit, setQuickEdit] = useState<{
     taskId: string;
@@ -675,30 +675,30 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
   };
 
   const uniqueStatuses = useMemo(() => {
-    const statusCol = initialColumns.find(c => c.key === 'status');
+    const statusCol = columns.find(c => c.key === 'status');
     const predefined = statusCol ? statusCol.options.map(o => o.value) : ['não iniciada', 'em progresso', 'falta testar', 'completa', 'descartada'];
-    const fromTasks = initialTasks.map(t => t.status).filter(Boolean) as string[];
+    const fromTasks = localTasks.map(t => t.status).filter(Boolean) as string[];
     return Array.from(new Set([...predefined, ...fromTasks]));
-  }, [initialTasks, initialColumns]);
+  }, [localTasks, columns]);
 
   const uniqueCategories = useMemo(() => {
-    const catCol = initialColumns.find(c => c.key === 'categoria');
+    const catCol = columns.find(c => c.key === 'categoria');
     const predefined = catCol ? catCol.options.map(o => o.value) : ['Programar', 'Design', 'Marketing', 'Geral'];
-    const fromTasks = initialTasks.map(t => t.categoria).filter(Boolean) as string[];
+    const fromTasks = localTasks.map(t => t.categoria).filter(Boolean) as string[];
     return Array.from(new Set([...predefined, ...fromTasks]));
-  }, [initialTasks, initialColumns]);
+  }, [localTasks, columns]);
 
   const uniqueUsers = useMemo(() => {
-    const userCol = initialColumns.find(c => c.key === 'responsavel');
+    const userCol = columns.find(c => c.key === 'responsavel');
     const predefined = userCol ? userCol.options.map(o => o.value) : ['João', 'Andy', 'Leo', 'Dani', 'Lorenzo', 'Nacky'];
-    const fromTasks = initialTasks.map(t => t.responsavel).filter(Boolean) as string[];
+    const fromTasks = localTasks.map(t => t.responsavel).filter(Boolean) as string[];
     return Array.from(new Set([...predefined, ...fromTasks])).sort();
-  }, [initialTasks, initialColumns]);
+  }, [localTasks, columns]);
 
   const uniqueDimensions = useMemo(() => {
-    const dimCol = initialColumns.find(c => c.key === 'dimensao');
+    const dimCol = columns.find(c => c.key === 'dimensao');
     const predefined = dimCol ? dimCol.options.map(o => o.value) : ['HUB', 'Aurtistic'];
-    const fromTasks = initialTasks.map(t => t.dimensao).filter(Boolean) as string[];
+    const fromTasks = localTasks.map(t => t.dimensao).filter(Boolean) as string[];
     let dims = Array.from(new Set([...predefined, ...fromTasks]));
     
     // Remove "favoritas" que estava repetido com visibilidade
@@ -709,7 +709,7 @@ export function TasksView({ initialTasks: rawInitialTasks, initialColumns = [], 
     }
     
     return dims.sort();
-  }, [initialTasks, initialColumns, isPersonalScope]);
+  }, [localTasks, columns, isPersonalScope]);
 
   const toggleFilter = (list: string[], setList: (l: string[]) => void, value: string) => {
     if (list.includes(value)) {

@@ -1,9 +1,9 @@
 {
-	"appId": "com.stangorlini.web",
-	"appName": "Stangorlini Web",
+	"appId": "com.stangorlini.aurtistic",
+	"appName": "Aurtistic",
 	"webDir": "public",
 	"server": {
-		"url": "https://stangorliniweb.vercel.app/",
+		"url": "https://aurtistic.vercel.app/",
 		"cleartext": true
 	}
 }

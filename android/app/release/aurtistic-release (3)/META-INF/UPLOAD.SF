@@ -1,6 +1,6 @@
 Signature-Version: 1.0
 Created-By: Signflinger
-SHA-256-Digest-Manifest: eBqJwhXrEPh4COwPSYv2vNiUJrp09w9uI2fU7UGQ9CQ=
+SHA-256-Digest-Manifest: ZaLaiNyf/IiKDhuz3xoO2dgtfrbo/1nd3LTM8vSd+rk=
 
 Name: BUNDLE-METADATA/com.android.tools.build.gradle/app-metadata.prop
  erties
@@ -26,7 +26,7 @@ Name: base/assets.pb
 SHA-256-Digest: q8tk92jTjifQLbTPUDjhS69VhF+Bho6xcF9YfjVaAOU=
 
 Name: base/assets/capacitor.config.json
-SHA-256-Digest: j5lddXG5U2/LmxXpVe3GroEKfOv8c6Iq50qw4ZnDlKA=
+SHA-256-Digest: D7hVNhrSiiZdTppJEKe1tTEbhRb0/+ImpNMONlJPMuM=
 
 Name: base/assets/capacitor.plugins.json
 SHA-256-Digest: FHjoKnxgSg0hRvPK8yhHCRjTTfTVpzodFWo3o+IwaCM=
@@ -34,41 +34,20 @@ SHA-256-Digest: FHjoKnxgSg0hRvPK8yhHCRjTTfTVpzodFWo3o+IwaCM=
 Name: base/assets/native-bridge.js
 SHA-256-Digest: pRC3s/DW5e78DWwjD1Iq40XqrWprODpyy8jzwLZ764k=
 
-Name: base/assets/public/Screenshot_2026-07-12-12-18-32-030_com.stango
- rlini.web.jpg
-SHA-256-Digest: qw1sXS2029a2qdvsLaRlRDhheILJZrKho2wNO+OkyZA=
+Name: base/assets/public/aurtistic-icon.png
+SHA-256-Digest: P8vRb78ooBSVmmtJgQke9zJ4nWKeA/BReGPT5WV7zIQ=
 
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 15.43.55.jpeg
-SHA-256-Digest: yXWVSlfyutgdWr9qQ7HKSPD+q9Fp0gh31+xt55+kvHY=
+Name: base/assets/public/aurtistic-logo-text.png
+SHA-256-Digest: 4fgrzCowwTg2VS7XBBd2/IFFGbcGwsTjvQyis4/oarI=
 
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 15.45.14 (1).jpe
- g
-SHA-256-Digest: +z/3ADpLefXM+fe0fpGwHQ/Ce8+gBtRGLVCh/NuD4II=
+Name: base/assets/public/aurtistic_app_icon_v10.png
+SHA-256-Digest: JsI9PuzWJyKzEGYhg+Y+ztnf7KR3vawrKyHVj8G7KXU=
 
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 15.45.14 (2).jpe
- g
-SHA-256-Digest: jL0cnEZwFFII6StLzp9KEP3XCsP/OYfzM3+SSRcwxTo=
+Name: base/assets/public/aurtistic_app_icon_v10_black.png
+SHA-256-Digest: vG4ii94RUWapNMylLxqz+ha6zaYiH6XBfjJYjfEFvCo=
 
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 15.45.14.jpeg
-SHA-256-Digest: 3DXhR8CjtNEHzvl3UvgwaktuZN5rwuaztaNPTotGXQc=
-
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 22.28.18.jpeg
-SHA-256-Digest: JT/bBtElUgnELQmpELumNmeNnTa33XgHGpvitwflIRI=
-
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 22.28.19 (1).jpe
- g
-SHA-256-Digest: oW/um5h5DZk4AiBKmFtuFQ1mFiLr/Dt4nGzUORsf9G0=
-
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 22.28.19 (2).jpe
- g
-SHA-256-Digest: eAOuoygvxyYqLrmbRAOjfVnB5wZ9fxhZP46ZRbyXs34=
-
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 22.28.19 (3).jpe
- g
-SHA-256-Digest: eMWkFg+PtIns0wJDovjUab9svdq6CP1CtNLysrutgdM=
-
-Name: base/assets/public/WhatsApp Image 2026-07-16 at 22.28.19.jpeg
-SHA-256-Digest: y2zGi9E6QIqqd+rffuFITKdK7FWNpWMsqZME47RlbPk=
+Name: base/assets/public/aurtistic_app_icon_v10_white.png
+SHA-256-Digest: Dv4cs9Uh7T7kxrtaXasicd4AmSBHyNoXMtpa1wiQlt0=
 
 Name: base/assets/public/cordova.js
 SHA-256-Digest: bsxk9is4welU5N97Dw54Z82y3rMJEdmRjH61H/Y7Mp4=
@@ -82,6 +61,15 @@ SHA-256-Digest: 57lrqeDg/FZ9GNbq01x+8AsY8BJrXQoL5NYz6P01Xmc=
 Name: base/assets/public/data_safety_export.csv
 SHA-256-Digest: SLHv6uiTGyu5wvMqqR6I2wxn2XuwyD9e1+2Cf+3Z2Wk=
 
+Name: base/assets/public/feature_graphic_final.png
+SHA-256-Digest: lnO/aBqTd1juHLUH+BWXz0rjiCIe53AMVsj+U0lBxtw=
+
+Name: base/assets/public/feature_graphic_final_black.png
+SHA-256-Digest: f0HvxkA1aUgBHKRw4kJ2dISKNZz1B+vsu4vnOHHQhqY=
+
+Name: base/assets/public/feature_graphic_final_white.png
+SHA-256-Digest: XjvzUt6yeKT69Hdobf075VTaiI1AfIo+LK4xxHF4l6E=
+
 Name: base/assets/public/file.svg
 SHA-256-Digest: 2QuwpF71VWKbGm9f60U9drtOtVcUqW8425qZynQUVkE=
 
@@ -94,26 +82,14 @@ SHA-256-Digest: zpkDDRLcyDCnKIWlxeuutPUZ+qsZSdOkr78dSzMN9WU=
 Name: base/assets/public/globe.svg
 SHA-256-Digest: ekU15K2p0/Ydkk/qWTHTr1HhJZkqwIMlT5SOuz29VeQ=
 
-Name: base/assets/public/hero.jpg
-SHA-256-Digest: sCtcrgCD9YMnruvLT8Ode72/EbAYNJAU61nuKQgxvwQ=
-
 Name: base/assets/public/icon.png
-SHA-256-Digest: DRUugEFu39qYS5Hm7Kn6Hr+x09l4Vx501cvjpLneIfg=
+SHA-256-Digest: zqE49xZlZqj73nqnD3pGIMUsVFYI+vN7uSGHufAFJH8=
 
 Name: base/assets/public/icon.svg
 SHA-256-Digest: V1huaIH2X7qaBbpaA3dxAuJpzQYZ1lC2E4Hf3P8j8SA=
 
 Name: base/assets/public/index.html
-SHA-256-Digest: O3aFfWCw8X+VoxfHv73QWXgwYgRv8JuHH92LXs4Gf2E=
-
-Name: base/assets/public/labdiv-logo.png
-SHA-256-Digest: PdLYfRRLbwhwrG9YleZPxivt/lb+2Bb/2JbEKVThXus=
-
-Name: base/assets/public/logo.png
-SHA-256-Digest: 7EOqTDVVATHM7+Kx4X2mY3vXzfOgP2erdN4Vt4bMzew=
-
-Name: base/assets/public/next.svg
-SHA-256-Digest: upXtZYV53C+JEoIN0dlxvoC0m9SgHLczvXBnBph7nlo=
+SHA-256-Digest: xCghrnd265r7GZ89mirOqfQ4yJ97Ml5FEkiapp4jEQc=
 
 Name: base/assets/public/perfil.jpeg
 SHA-256-Digest: 0/FvnDVYKnogMe8NarTo8hUYoZdnre2MFQv6dajWBJs=
@@ -121,17 +97,11 @@ SHA-256-Digest: 0/FvnDVYKnogMe8NarTo8hUYoZdnre2MFQv6dajWBJs=
 Name: base/assets/public/sw.js
 SHA-256-Digest: tLxInMkC87oLdPYbAGoswzNqh+MNIY2zBqHM/UgjTB0=
 
-Name: base/assets/public/vercel.svg
-SHA-256-Digest: w68o8B0OIzEncaIm84Q8lha8R430QNjxFaxoIGbsD10=
-
-Name: base/assets/public/window.svg
-SHA-256-Digest: H6CKiJnslLsQGN7eQGK2y0LYDqSw6yWODvSj0uU1msY=
-
 Name: base/dex/classes.dex
 SHA-256-Digest: /goxV9DorfFLepbe5sZSvcPcw/eOUoi9LTXkRrcvXGk=
 
 Name: base/manifest/AndroidManifest.xml
-SHA-256-Digest: tAY7CLsipF+OQl+hhq+zXVBHiwEozn2nfDgwiPMLvN0=
+SHA-256-Digest: Ocg9u/ewjT2beaCk41qibVPtl/+5VKNnovlyopCay9o=
 
 Name: base/res/anim-v21/fragment_fast_out_extra_slow_in.xml
 SHA-256-Digest: jS4uyqNlbcrZhNtn8U31F2m/lpBVY3ruQE7hUwExG/U=
@@ -1438,7 +1408,7 @@ Name: base/res/xml/widget_info.xml
 SHA-256-Digest: sxlzAzvx2NdYClJ0Iqk4OFo7jic1ONy8U5TQC+y/nZU=
 
 Name: base/resources.pb
-SHA-256-Digest: kL2oCQjrTlqD04GuBEm19U7aOxB8qpDZl95HKbUGPVo=
+SHA-256-Digest: 59HqELnUIYSwyRE0RJZy2v0De9qPUytSBXjqzVvVCxk=
 
 Name: base/root/DebugProbesKt.bin
 SHA-256-Digest: ypS/oc4BR20CnbRUgA+PqGy+Imnsc5oCtRtXHAY5UIE=

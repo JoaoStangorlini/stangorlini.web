@@ -462,3 +462,35 @@ export async function saveUserProfileData(profileData: {
   revalidatePath('/aurtistic');
   revalidatePath('/');
 }
+
+export async function updateNotificationConfig(notificationsConfig: any) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Usuário não autenticado");
+
+  // Fetch current config to merge
+  const { data: profile, error: fetchError } = await supabase
+    .from('user_profiles')
+    .select('features_config')
+    .eq('id', user.id)
+    .single();
+
+  if (fetchError) throw new Error(fetchError.message);
+
+  const currentFeaturesConfig = profile?.features_config || {};
+  
+  const updatedFeaturesConfig = {
+    ...currentFeaturesConfig,
+    notifications: notificationsConfig
+  };
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({ features_config: updatedFeaturesConfig })
+    .eq('id', user.id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath('/configurar-notificacoes');
+  revalidatePath('/aurtistic');
+}
